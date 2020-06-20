@@ -1,7 +1,7 @@
 import { FredokaOne_400Regular, useFonts } from '@expo-google-fonts/fredoka-one';
 import { AppLoading } from 'expo';
 import React from 'react';
-import { Image, View } from 'react-native';
+import { Image, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 
 import Logo from '../../../assets/splash.png';
 
@@ -16,12 +16,14 @@ const Main = (props: any) => {
     return <AppLoading />;
   } else {
     return (
-      <View style={Styled.main}>
-        <View style={Styled.header}>
-          <Image source={Logo} style={Styled.logo} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={Styled.main}>
+          <View style={Styled.header}>
+            <Image source={Logo} style={Styled.logo} />
+          </View>
+          <View style={Styled.body}>{props.children}</View>
         </View>
-        <View style={Styled.body}>{props.children}</View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 };

@@ -1,15 +1,21 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import Logo from '../../assets/splash.png';
-
 import Box from '../layout/box';
+import PageHeader from '../components/page-header';
 
 const Home = () => {
   return (
     <View>
-      <Box title={'Home'}>
-        <Text>Home</Text>
+      <PageHeader title={'Home'} />
+      <Box>
+        <Text>Riddle</Text>
+      </Box>
+      <Box>
+        <Text>Hints</Text>
+      </Box>
+      <Box>
+        <Text>Guess</Text>
       </Box>
     </View>
   );

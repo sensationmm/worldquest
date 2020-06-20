@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import Fonts from '../../constants/Fonts';
 
 export default StyleSheet.create({
   main: {
@@ -9,6 +10,7 @@ export default StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     padding: 20,
+    marginBottom: 20
   },
   title: {
     marginBottom: 20,
@@ -18,10 +20,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   titleText: {
-    fontSize: 20,
-    textTransform: 'uppercase',
-    color: Colors.brand.primary,
-    fontFamily: 'FredokaOne_400Regular',
+    ...Fonts.subHeading,
   },
   icon: {
     maxWidth: 30,
