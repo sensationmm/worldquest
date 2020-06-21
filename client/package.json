@@ -8,14 +8,17 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.5",
     "@expo-google-fonts/fredoka-one": "^0.1.0",
     "@react-navigation/material-bottom-tabs": "^5.2.10",
     "@react-navigation/native": "^5.5.1",
     "@types/react-native-vector-icons": "^6.4.5",
     "@types/react-navigation": "^3.4.0",
+    "apollo-boost": "^0.4.9",
     "classnames-react-native": "^1.1.0",
     "expo": "~37.0.3",
     "expo-font": "~8.1.0",
+    "graphql": "^15.1.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
