@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import Button from '../components/button';
-import PageHeader from '../components/page-header';
 import FormInput from '../components/form-input';
+import PageHeader from '../components/page-header';
 
 const Login = () => {
   const [email, setEmail] = useState('');

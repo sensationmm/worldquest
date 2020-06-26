@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import Box from '../layout/box';
 import PageHeader from '../components/page-header';
+import Box from '../layout/box';
 
 const Home = () => {
   return (

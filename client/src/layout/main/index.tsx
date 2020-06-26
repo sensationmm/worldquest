@@ -3,7 +3,7 @@ import { AppLoading } from 'expo';
 import React from 'react';
 import { Image, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 
-import Logo from '../../../assets/splash.png';
+import Logo from '../../assets/logo.png';
 
 import Styled from './styles';
 
