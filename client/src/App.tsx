@@ -1,7 +1,7 @@
-import { ApolloProvider } from '@apollo/react-hooks';
+// import { ApolloProvider } from '@apollo/react-hooks';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import ApolloClient from 'apollo-boost';
+// import ApolloClient from 'apollo-boost';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -14,14 +14,13 @@ import Profile from './containers/Profile';
 import Progress from './containers/Progress';
 import Register from './containers/Register';
 import Stats from './containers/Stats';
-
 import Main from './layout/main';
 
 import getByValue from './utils/getByValue';
 
-const client = new ApolloClient({
-  uri: 'http://localhost:5000',
-});
+// const client = new ApolloClient({
+//   uri: 'http://localhost:5000',
+// });
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -80,43 +79,43 @@ const App = () => {
   };
 
   return (
-    <ApolloProvider client={client}>
-      <Main>
-        <NavigationContainer theme={theme}>
-          {isLoggedIn ? (
-            <Tab.Navigator
-              initialRouteName={'Home'}
-              barStyle={styles.tabs}
-              labeled={false}
-              screenOptions={({ route }: { route: any }) => ({
-                tabBarIcon: ({ focused }: { focused: boolean }) => {
-                  return icon(tabs, route, focused);
-                },
-              })}
-            >
-              {tabs.map((tab) => {
-                return <Tab.Screen key={`tab-${tab.name}`} name={tab.name} component={tab.component} />;
-              })}
-            </Tab.Navigator>
-          ) : (
-            <Tab.Navigator
-              initialRouteName={'Home'}
-              barStyle={styles.tabs}
-              labeled={false}
-              screenOptions={({ route }: { route: any }) => ({
-                tabBarIcon: ({ focused }: { focused: boolean }) => {
-                  return icon(tabsAuth, route, focused);
-                },
-              })}
-            >
-              {tabsAuth.map((tab) => {
-                return <Tab.Screen key={`tab-${tab.name}`} name={tab.name} component={tab.component} />;
-              })}
-            </Tab.Navigator>
-          )}
-        </NavigationContainer>
-      </Main>
-    </ApolloProvider>
+    // <ApolloProvider client={client}>
+    <Main>
+      <NavigationContainer theme={theme}>
+        {isLoggedIn ? (
+          <Tab.Navigator
+            initialRouteName={'Home'}
+            barStyle={styles.tabs}
+            labeled={false}
+            screenOptions={({ route }: { route: any }) => ({
+              tabBarIcon: ({ focused }: { focused: boolean }) => {
+                return icon(tabs, route, focused);
+              },
+            })}
+          >
+            {tabs.map((tab) => {
+              return <Tab.Screen key={`tab-${tab.name}`} name={tab.name} component={tab.component} />;
+            })}
+          </Tab.Navigator>
+        ) : (
+          <Tab.Navigator
+            initialRouteName={'Home'}
+            barStyle={styles.tabs}
+            labeled={false}
+            screenOptions={({ route }: { route: any }) => ({
+              tabBarIcon: ({ focused }: { focused: boolean }) => {
+                return icon(tabsAuth, route, focused);
+              },
+            })}
+          >
+            {tabsAuth.map((tab) => {
+              return <Tab.Screen key={`tab-${tab.name}`} name={tab.name} component={tab.component} />;
+            })}
+          </Tab.Navigator>
+        )}
+      </NavigationContainer>
+    </Main>
+    // </ApolloProvider>
   );
 };
 
