@@ -3,6 +3,19 @@
     "name": "world-quest",
     "slug": "world-quest",
     "sdkVersion": "38.0.0",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "splash": {
+      "image": "./src/assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#9c0f97"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": "./src/assets/icon.png"
+    }
   }
 }
