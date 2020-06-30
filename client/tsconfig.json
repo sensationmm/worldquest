@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es2015", "esnext.asynciterable"],
+    "jsx": "react-native",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "types": ["jest"],
+    "esModuleInterop": true,
+    "outDir": "build/"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.test.tsx"]
+}
