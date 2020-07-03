@@ -7,7 +7,7 @@
     "tslint": "tslint --project .",
     "tsc": "tsc --project . --noEmit --watch",
     "tsc-test": "npm run tslint && npm run tsc",
-    "test": "jest --watch --coverage --coverage-provider=v8"
+    "test": "jest --watchAll --coverage"
   },
   "dependencies": {
     "@expo-google-fonts/fredoka-one": "^0.1.0",
@@ -59,7 +59,13 @@
     ],
     "collectCoverageFrom": [
       "!<rootDir>/**/styles.tsx",
-      "!<rootDir>/**/mocks/**"
+      "!<rootDir>/**/mocks/**",
+      "!<rootDir>/types.d.ts",
+      "!<rootDir>/build/**",
+      "!<rootDir>/src/assets/**"
+    ],
+    "coverageReporters": [
+      "text"
     ],
     "globals": {
       "ts-jest": {
