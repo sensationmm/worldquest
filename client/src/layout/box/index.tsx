@@ -17,7 +17,7 @@ const Box: React.FC<BoxProps> = ({ children, title, icon, centered = false }) =>
       {(title || icon) && (
         <View style={Styled.title}>
           {icon && <Image style={Styled.icon} accessibilityLabel={title} source={icon} />}
-          <Text style={Styled.titleText}>{title}</Text>
+          {title && <Text style={Styled.titleText}>{title}</Text>}
         </View>
       )}
       {children}

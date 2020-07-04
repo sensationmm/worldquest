@@ -66,6 +66,7 @@ const App = () => {
   const resourcesLoaded = fontsLoaded;
 
   const icon = (tabsArray: object[], route: any, focused: boolean) => {
+    console.log('icon');
     const iconName = getByValue(tabsArray, 'name', route.name).icon;
     const iconColor = focused ? Colors.basic.white : Colors.brand.secondary;
     const iconSize = route.name === 'Home' ? 50 : 24;
@@ -91,9 +92,9 @@ const App = () => {
     // <ApolloProvider client={client}>
     <Main>
       {!resourcesLoaded ? (
-        <AppLoading />
+        <AppLoading testId={'app-loading'} />
       ) : (
-        <NavigationContainer theme={theme}>
+        <NavigationContainer theme={theme} testId={'navigation-container'}>
           {isLoggedIn ? (
             <Tab.Navigator
               initialRouteName={'Home'}
