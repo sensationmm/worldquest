@@ -3,6 +3,7 @@
   "extends": ["tslint:recommended"],
   "rules": {
     "no-implicit-dependencies": [true, "dev"],
-    "no-console": false
+    "no-console": false,
+    "no-var-requires": false
   }
 }
