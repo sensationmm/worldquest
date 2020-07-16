@@ -2,8 +2,8 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import renderer from 'react-test-renderer';
 
-import LayoutBox from './';
 import ComponentMock from '../../mocks/componentMock';
+import LayoutBox from './';
 const FileMock = require('../../mocks/fileMock');
 
 import Styled from './styles';
@@ -15,7 +15,7 @@ describe('LayoutBox', () => {
         <LayoutBox>
           <ComponentMock />
           <ComponentMock />
-        </LayoutBox>
+        </LayoutBox>,
       )
       .toJSON();
     expect(rendered).toBeTruthy();
@@ -26,7 +26,7 @@ describe('LayoutBox', () => {
       <LayoutBox>
         <ComponentMock />
         <ComponentMock />
-      </LayoutBox>
+      </LayoutBox>,
     );
 
     const element = rendered.root.findByType(View);
@@ -41,7 +41,7 @@ describe('LayoutBox', () => {
       <LayoutBox centered>
         <ComponentMock />
         <ComponentMock />
-      </LayoutBox>
+      </LayoutBox>,
     );
 
     const element = rendered.root.findByType(View);
@@ -53,7 +53,7 @@ describe('LayoutBox', () => {
       <LayoutBox title={'Foo'}>
         <ComponentMock />
         <ComponentMock />
-      </LayoutBox>
+      </LayoutBox>,
     );
 
     const element = rendered.root.findByType(View);
@@ -72,7 +72,7 @@ describe('LayoutBox', () => {
       <LayoutBox icon={FileMock}>
         <ComponentMock />
         <ComponentMock />
-      </LayoutBox>
+      </LayoutBox>,
     );
 
     const element = rendered.root.findByType(View);
@@ -91,7 +91,7 @@ describe('LayoutBox', () => {
       <LayoutBox title={'Foo'} icon={FileMock}>
         <ComponentMock />
         <ComponentMock />
-      </LayoutBox>
+      </LayoutBox>,
     );
 
     const element = rendered.root.findByType(View);

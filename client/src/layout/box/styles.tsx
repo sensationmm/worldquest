@@ -10,7 +10,7 @@ export default StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     padding: 20,
-    marginBottom: 20
+    marginBottom: 20,
   },
   title: {
     marginBottom: 20,

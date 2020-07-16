@@ -1,8 +1,8 @@
 import { AppLoading } from 'expo';
-// import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
+import ShallowRenderer from 'react-test-renderer/shallow';
 import { NavigationContainer } from '@react-navigation/native';
 
 import App from './App';
@@ -26,8 +26,11 @@ jest.mock('@react-navigation/material-bottom-tabs', () => ({
 
 describe('App', () => {
   it('renders without crashing if fonts fail to load', () => {
-    const rendered = renderer.create(<App />);
-    const element = rendered.root.findByType(View);
+    const renderer = ShallowRenderer.createRenderer();
+    renderer.render(<App />);
+    const rendered = renderer.getRenderOutput();
+    console.log(rendered);
+    const element = rendered.findByType(View);
     const loader = element.findAll((n) => n.type === AppLoading && n.props.testId === 'app-loading');
     const navigationContainer = element.findAll((n) => n.type === NavigationContainer && n.props.testId === 'navigation-container');
 

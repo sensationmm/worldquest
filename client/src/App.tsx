@@ -1,60 +1,18 @@
-// import { ApolloProvider } from '@apollo/react-hooks';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { FredokaOne_400Regular, useFonts } from '@expo-google-fonts/fredoka-one';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-// import ApolloClient from 'apollo-boost';
+import { NavigationContainer } from '@react-navigation/native';
 import { AppLoading } from 'expo';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
-import Colors from './constants/Colors';
-import Home from './containers/Home';
-import Info from './containers/Info';
-import Login from './containers/Login';
-import Profile from './containers/Profile';
-import Progress from './containers/Progress';
-import Register from './containers/Register';
-import Stats from './containers/Stats';
-
+import Icon from './components/icon';
 import Main from './layout/main';
+
+import { tabs, tabsAuth } from './App.menu';
+import { styles, theme } from './App.style';
 
 import getByValue from './utils/getByValue';
 
-// const client = new ApolloClient({
-//   uri: 'http://localhost:5000',
-// });
-
 const Tab = createMaterialBottomTabNavigator();
-
-const styles = StyleSheet.create({
-  tabs: {
-    backgroundColor: Colors.brand.primary,
-    shadowOpacity: 0,
-  },
-});
-
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: Colors.brand.primary,
-  },
-};
-
-const tabs = [
-  { name: 'Progress', component: Progress, icon: 'tasks' },
-  { name: 'Stats', component: Stats, icon: 'chart-line' },
-  { name: 'Home', component: Home, icon: 'map-marked-alt' },
-  { name: 'Profile', component: Profile, icon: 'user' },
-  { name: 'Info', component: Info, icon: 'info-circle' },
-];
-
-const tabsAuth = [
-  { name: 'Log In', component: Login, icon: 'user' },
-  { name: 'Register', component: Register, icon: 'user-plus' },
-  { name: 'Info', component: Info, icon: 'info-circle' },
-];
 
 const App = () => {
   const isLoggedIn = false;
@@ -66,30 +24,13 @@ const App = () => {
   const resourcesLoaded = fontsLoaded;
 
   const icon = (tabsArray: object[], route: any, focused: boolean) => {
-    console.log('icon');
     const iconName = getByValue(tabsArray, 'name', route.name).icon;
-    const iconColor = focused ? Colors.basic.white : Colors.brand.secondary;
-    const iconSize = route.name === 'Home' ? 50 : 24;
-    const iconMargin = route.name === 'Home' ? 0 : 26;
+    const iconLarge = route.name === 'Home';
 
-    return (
-      <FontAwesome5
-        name={iconName}
-        size={iconSize}
-        color={iconColor}
-        style={{
-          marginTop: iconMargin,
-          height: iconSize,
-          width: iconSize + 6,
-          textAlign: 'center',
-        }}
-        solid
-      />
-    );
+    return <Icon name={iconName} large={iconLarge} focused={focused} />;
   };
 
   return (
-    // <ApolloProvider client={client}>
     <Main>
       {!resourcesLoaded ? (
         <AppLoading testId={'app-loading'} />
@@ -129,7 +70,6 @@ const App = () => {
         </NavigationContainer>
       )}
     </Main>
-    // </ApolloProvider>
   );
 };
 

@@ -1,5 +1,5 @@
-import Colors from '../constants/Colors';
 import { TextStyle } from 'react-native';
+import Colors from '../constants/Colors';
 
 const base = {
   fontFamily: 'FredokaOne_400Regular',

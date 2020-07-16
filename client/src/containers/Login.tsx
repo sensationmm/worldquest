@@ -16,7 +16,7 @@ const Login = () => {
       <FormInput label={'Email address'} value={email} onChange={setEmail} />
       <FormInput isPassword label={'Password'} value={password} onChange={setPassword} />
 
-      <Button onClick={() => console.error('login!')} label={'Log In'} />
+      <Button onClick={() => console.log('login!')} label={'Log In'} />
     </View>
   );
 };
