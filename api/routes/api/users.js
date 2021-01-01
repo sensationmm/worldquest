@@ -30,7 +30,7 @@ router.post("/register", (req, res) => {
 
   // Check validation
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json({ msg: errors });
   }
 
   User.findOne({ email: req.body.email }).then((user) => {
@@ -49,6 +49,7 @@ router.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password,
         avatar,
+        clue_tokens: 5,
       });
 
       bcrypt.genSalt(10, (err, salt) => {
@@ -77,17 +78,15 @@ router.post("/login", (req, res) => {
 
   // Check validation
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json({ msg: errors });
   }
 
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
 
   User.findOne({ email }).then((user) => {
     // check user exists
     if (!user) {
-      errors.email = "User not found";
-      return res.status(404).json(errors);
+      return res.status(404).json({ msg: "User not found" });
     }
 
     // Check correct password
@@ -109,15 +108,14 @@ router.post("/login", (req, res) => {
             keys.secretOrKey,
             { expiresIn: 3600 },
             (err, token) => {
-              res.json({ success: true, token: `Bearer ${token}` });
+              res.json({ success: true, token: token });
             }
           );
         } else {
-          errors.password = "Password incorrect";
-          return res.status(400).json(errors);
+          return res.status(400).json({ msg: "Password incorrect" });
         }
       })
-      .catch(() => res.status(400).json("BCrypt failure"));
+      .catch(() => res.status(400).json({ msg: "BCrypt failure" }));
   });
 });
 
@@ -149,8 +147,11 @@ router.post(
       { new: true }
     )
       .then(() => res.json({ success: true, msg: "Last played updated" }))
-      .catch(() => res.status(400).json("User not found"));
-  }
+      .catch(() => res.status(400).json({ msg: "User not found" }));
+  },
+  (error) => {
+    res.status(400).json({ msg: error });
+  },
 );
 
 module.exports = router;

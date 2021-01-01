@@ -2,9 +2,12 @@ import { FredokaOne_400Regular, useFonts } from '@expo-google-fonts/fredoka-one'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { AppLoading } from 'expo';
-import React from 'react';
+import * as SecureStore from 'expo-secure-store';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import Icon from './components/icon';
+import Loader from './components/loader';
 import Main from './layout/main';
 
 import { tabs, tabsAuth } from './App.menu';
@@ -12,10 +15,22 @@ import { styles, theme } from './App.style';
 
 import getByValue from './utils/getByValue';
 
+import accountService from './services/AccountService';
+
+export type ScreenProps = {
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+};
+
 const Tab = createMaterialBottomTabNavigator();
 
+EStyleSheet.build();
+
 const App = () => {
-  const isLoggedIn = false;
+  const AccountService = new accountService();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [fontsLoaded] = useFonts({
     FredokaOne_400Regular,
@@ -30,46 +45,83 @@ const App = () => {
     return <Icon name={iconName} large={iconLarge} focused={focused} />;
   };
 
+  const reauth = async () => {
+    const authToken = await SecureStore.getItemAsync('jwt_token');
+
+    if (!isLoggedIn && authToken) {
+      setIsLoading(true);
+      AccountService.current().then(async (response) => {
+        if (response.status === 200) {
+          setIsLoggedIn(true);
+          setIsLoading(false);
+        } else {
+          await SecureStore.deleteItemAsync('jwt_token');
+          setIsLoading(false);
+        }
+      });
+    } else {
+      await SecureStore.deleteItemAsync('jwt_token');
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    reauth();
+  }, []);
+
   return (
-    <Main>
+    <>
       {!resourcesLoaded ? (
-        <AppLoading testId={'app-loading'} />
+        <Main>
+          <AppLoading testId={'app-loading'} />
+        </Main>
       ) : (
-        <NavigationContainer theme={theme} testId={'navigation-container'}>
-          {isLoggedIn ? (
-            <Tab.Navigator
-              initialRouteName={'Home'}
-              barStyle={styles.tabs}
-              labeled={false}
-              screenOptions={({ route }: { route: any }) => ({
-                tabBarIcon: ({ focused }: { focused: boolean }) => {
-                  return icon(tabs, route, focused);
-                },
-              })}
-            >
-              {tabs.map((tab) => {
-                return <Tab.Screen key={`tab-${tab.name}`} name={tab.name} component={tab.component} />;
-              })}
-            </Tab.Navigator>
-          ) : (
-            <Tab.Navigator
-              initialRouteName={'Home'}
-              barStyle={styles.tabs}
-              labeled={false}
-              screenOptions={({ route }: { route: any }) => ({
-                tabBarIcon: ({ focused }: { focused: boolean }) => {
-                  return icon(tabsAuth, route, focused);
-                },
-              })}
-            >
-              {tabsAuth.map((tab) => {
-                return <Tab.Screen key={`tab-${tab.name}`} name={tab.name} component={tab.component} />;
-              })}
-            </Tab.Navigator>
-          )}
-        </NavigationContainer>
+        <Main>
+          <NavigationContainer theme={theme} testId={'navigation-container'}>
+            {isLoggedIn ? (
+              <Tab.Navigator
+                initialRouteName={'Home'}
+                barStyle={styles.tabs}
+                labeled={false}
+                screenOptions={({ route }: { route: any }) => ({
+                  tabBarIcon: ({ focused }: { focused: boolean }) => {
+                    return icon(tabs, route, focused);
+                  },
+                })}
+              >
+                {tabs.map((tab) => {
+                  return (
+                    <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
+                      {() => <tab.component setIsLoading={setIsLoading} setIsLoggedIn={setIsLoggedIn} />}
+                    </Tab.Screen>
+                  );
+                })}
+              </Tab.Navigator>
+            ) : (
+              <Tab.Navigator
+                initialRouteName={'Register'}
+                barStyle={styles.tabs}
+                labeled={false}
+                screenOptions={({ route }: { route: any }) => ({
+                  tabBarIcon: ({ focused }: { focused: boolean }) => {
+                    return icon(tabsAuth, route, focused);
+                  },
+                })}
+              >
+                {tabsAuth.map((tab) => {
+                  return (
+                    <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
+                      {() => <tab.component setIsLoading={setIsLoading} setIsLoggedIn={setIsLoggedIn} />}
+                    </Tab.Screen>
+                  );
+                })}
+              </Tab.Navigator>
+            )}
+          </NavigationContainer>
+          <Loader isLoading={isLoading} />
+        </Main>
       )}
-    </Main>
+    </>
   );
 };
 

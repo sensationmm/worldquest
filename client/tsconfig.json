@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["es2016", "esnext.asynciterable"],
+    "lib": ["es2016", "esnext.asynciterable", "esnext"],
     "jsx": "react-native",
     "strict": true,
     "noUnusedLocals": true,

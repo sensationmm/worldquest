@@ -57,9 +57,9 @@ describe('LayoutBox', () => {
     );
 
     const element = rendered.root.findByType(View);
-    const elementTitle = element.findAll((n) => n.type === View && n.props.style === Styled.title);
-    const elementTitleIcon = element.findAll((n) => n.type === Image && n.props.style === Styled.icon);
-    const elementTitleText = element.findAll((n) => n.type === Text && n.props.style === Styled.titleText);
+    const elementTitle = element.findAll((n: any) => n.type === View && n.props.style === Styled.title);
+    const elementTitleIcon = element.findAll((n: any) => n.type === Image && n.props.style === Styled.icon);
+    const elementTitleText = element.findAll((n: any) => n.type === Text && n.props.style === Styled.titleText);
 
     expect(elementTitle.length).toBe(1);
     expect(elementTitleIcon.length).toBe(0);
@@ -76,9 +76,9 @@ describe('LayoutBox', () => {
     );
 
     const element = rendered.root.findByType(View);
-    const elementTitle = element.findAll((n) => n.type === View && n.props.style === Styled.title);
-    const elementTitleIcon = element.findAll((n) => n.type === Image && n.props.style === Styled.icon);
-    const elementTitleText = element.findAll((n) => n.type === Text && n.props.style === Styled.titleText);
+    const elementTitle = element.findAll((n: any) => n.type === View && n.props.style === Styled.title);
+    const elementTitleIcon = element.findAll((n: any) => n.type === Image && n.props.style === Styled.icon);
+    const elementTitleText = element.findAll((n: any) => n.type === Text && n.props.style === Styled.titleText);
 
     expect(elementTitle.length).toBe(1);
     expect(elementTitleIcon.length).toBe(1);
@@ -95,9 +95,9 @@ describe('LayoutBox', () => {
     );
 
     const element = rendered.root.findByType(View);
-    const elementTitle = element.findAll((n) => n.type === View && n.props.style === Styled.title);
-    const elementTitleIcon = element.findAll((n) => n.type === Image && n.props.style === Styled.icon);
-    const elementTitleText = element.findAll((n) => n.type === Text && n.props.style === Styled.titleText);
+    const elementTitle = element.findAll((n: any) => n.type === View && n.props.style === Styled.title);
+    const elementTitleIcon = element.findAll((n: any) => n.type === Image && n.props.style === Styled.icon);
+    const elementTitleText = element.findAll((n: any) => n.type === Text && n.props.style === Styled.titleText);
 
     expect(elementTitle.length).toBe(1);
     expect(elementTitleIcon.length).toBe(1);

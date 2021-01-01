@@ -1,3 +1,4 @@
+import classNames from 'classnames-react-native';
 import React from 'react';
 import { Text, TouchableHighlight, View } from 'react-native';
 
@@ -5,14 +6,15 @@ import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 import Styled from './styles';
 
-interface FormInputProps {
+interface ButtonProps {
   label: string;
   isPassword?: boolean;
   onClick: () => void;
   disabled?: boolean;
+  small?: boolean;
 }
 
-const Button: React.FC<FormInputProps> = ({ label, onClick, disabled = false }) => {
+const Button: React.FC<ButtonProps> = ({ label, onClick, disabled = false, small = false }) => {
   return (
     <TouchableHighlight
       disabled={disabled}
@@ -20,8 +22,8 @@ const Button: React.FC<FormInputProps> = ({ label, onClick, disabled = false }) 
       underlayColor={Colors.basic.white}
       style={{ borderRadius: 20 }}
     >
-      <View style={Styled.main}>
-        <Text style={{ ...Fonts.subHeading, ...Styled.buttonText }}>{label}</Text>
+      <View style={classNames(Styled.main, small && Styled.small, disabled && Styled.disabled)}>
+        <Text style={classNames(Fonts.subHeading, Styled.buttonText, small && Styled.buttonTextSmall)}>{label}</Text>
       </View>
     </TouchableHighlight>
   );

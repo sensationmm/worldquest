@@ -1,7 +1,9 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-const Stats = () => {
+import { ScreenProps } from '../App';
+
+const Stats: React.FC<ScreenProps> = () => {
   return (
     <View>
       <Text>Stats</Text>

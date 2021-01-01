@@ -1,4 +1,4 @@
 module.exports = {
-  mongoURI: "mongodb://admin:W0rldQu3st319!@ds147225.mlab.com:47225/worldquest",
-  secretOrKey: "secret",
+  mongoURI: 'mongodb+srv://admin:W0rldQu3st319!@cluster0.ppaps.mongodb.net/worldquest?retryWrites=true&w=majority',
+  secretOrKey: 'secret',
 };

@@ -10,6 +10,18 @@ const progress = require('./routes/api/progress');
 
 const app = express();
 
+// Log calls
+// apiLogger = () => {
+//   return (req,res,next) => {
+   
+//     console.log(req.url.toUpperCase());
+//     console.log(res.body);
+//     next();
+//   }
+// }
+// app.use(apiLogger());
+
+
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

@@ -16,13 +16,13 @@ describe('getByValue()', () => {
     ];
   });
 
-  test('returns object if key/value pair found', () => {
+  it('returns object if key/value pair found', () => {
     const searchKey = 'valOne';
     const object = getByValue(searchArray, 'keyOne', searchKey);
     expect(object).toEqual(searchArray[0]);
   });
 
-  test('returns `null` if key/value pair not found', () => {
+  it('returns `null` if key/value pair not found', () => {
     const searchKey = 'valFive';
     const object = getByValue(searchArray, 'keyOne', searchKey);
     expect(object).toEqual(undefined);

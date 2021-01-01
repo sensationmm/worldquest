@@ -1,39 +1,44 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --minify",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "tslint": "tslint --project .",
     "tsc": "tsc --project . --noEmit --watch",
     "tsc-test": "npm run tslint && npm run tsc",
-    "test": "jest --watchAll --coverage"
+    "test": "jest --watchAll --coverage --silent"
   },
   "dependencies": {
     "@expo-google-fonts/fredoka-one": "^0.1.0",
     "@expo/vector-icons": "^10.2.0",
     "@react-navigation/material-bottom-tabs": "^5.2.12",
     "@react-navigation/native": "^5.6.1",
+    "axios": "^0.21.0",
     "classnames-react-native": "^1.1.0",
-    "expo": "~38.0.1",
-    "expo-splash-screen": "^0.3.1",
+    "date-fns": "^2.16.1",
+    "expo": "~38.0.8",
+    "expo-secure-store": "~9.0.1",
+    "expo-splash-screen": "^0.5.0",
     "expo-status-bar": "^1.0.0",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.0.tar.gz",
+    "react-native-extended-stylesheet": "^0.12.0",
+    "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-paper": "^3.10.1",
-    "react-native-vector-icons": "^6.6.0",
+    "react-native-vector-icons": "6.6.0",
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "@types/expo": "^33.0.1",
-    "@types/jest": "^26.0.3",
+    "@types/jest": "^26.0.7",
     "@types/react": "^16.9.41",
     "@types/react-native": "^0.62.14",
     "@types/react-native-vector-icons": "^6.4.5",
     "@types/react-test-renderer": "^16.9.2",
-    "jest": "^26.1.0",
+    "jest": "^26.6.3",
     "jest-expo": "^38.0.2",
     "react-test-renderer": "^16.13.1",
     "ts-jest": "^26.1.1",
@@ -67,9 +72,11 @@
     "coverageReporters": [
       "text"
     ],
+    "timers": "fake",
+    "testEnvironment": "jsdom",
     "globals": {
       "ts-jest": {
-        "tsConfig": {
+        "tsconfig": {
           "jsx": "react"
         }
       }

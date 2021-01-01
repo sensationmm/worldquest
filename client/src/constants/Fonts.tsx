@@ -15,6 +15,12 @@ export default {
   body: {
     fontSize: 16,
   },
+  bodySmall: {
+    fontSize: 12,
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
   subHeading: {
     ...base,
     fontSize: 20,
@@ -31,5 +37,8 @@ export default {
   label: {
     ...base,
     fontSize: 14,
+  },
+  riddle: {
+    fontSize: 30,
   },
 } as TextStyleExport;

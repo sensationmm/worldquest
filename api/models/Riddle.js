@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const RiddleSchema = new Schema({
   question: {
-    type: String,
+    type: Array,
     required: true,
   },
   answer: {

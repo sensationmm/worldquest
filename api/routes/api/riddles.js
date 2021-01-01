@@ -13,7 +13,7 @@ router.post("/create", (req, res) => {
 
   // Check validation
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json({ msg: errors });
   }
 
   Riddle.findOne()

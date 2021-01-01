@@ -1,7 +1,9 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-const Info = () => {
+import { ScreenProps } from '../App';
+
+const Info: React.FC<ScreenProps> = () => {
   return (
     <View>
       <Text>Info</Text>

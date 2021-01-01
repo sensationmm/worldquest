@@ -1,12 +1,11 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { AppLoading } from 'expo';
 import React from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
-import ShallowRenderer from 'react-test-renderer/shallow';
-import { NavigationContainer } from '@react-navigation/native';
 
-import App from './App';
 import ComponentMock from '../src/mocks/componentMock';
+import App from './App';
 
 jest.mock('@expo-google-fonts/fredoka-one', () => ({
   useFonts: jest.fn().mockReturnValueOnce([false]).mockReturnValue([true]),
@@ -26,13 +25,12 @@ jest.mock('@react-navigation/material-bottom-tabs', () => ({
 
 describe('App', () => {
   it('renders without crashing if fonts fail to load', () => {
-    const renderer = ShallowRenderer.createRenderer();
-    renderer.render(<App />);
-    const rendered = renderer.getRenderOutput();
-    console.log(rendered);
-    const element = rendered.findByType(View);
+    const rendered = renderer.create(<App />);
+    const element = rendered.root.findByType(View);
     const loader = element.findAll((n) => n.type === AppLoading && n.props.testId === 'app-loading');
-    const navigationContainer = element.findAll((n) => n.type === NavigationContainer && n.props.testId === 'navigation-container');
+    const navigationContainer = element.findAll(
+      (n) => n.type === NavigationContainer && n.props.testId === 'navigation-container',
+    );
 
     expect(rendered.toJSON()).toBeTruthy();
     expect(loader.length).toBe(1);
@@ -43,7 +41,9 @@ describe('App', () => {
     const rendered = renderer.create(<App />);
     const element = rendered.root.findByType(View);
     const loader = element.findAll((n) => n.type === AppLoading && n.props.testId === 'app-loading');
-    const navigationContainer = element.findAll((n) => n.type === NavigationContainer && n.props.testId === 'navigation-container');
+    const navigationContainer = element.findAll(
+      (n) => n.type === NavigationContainer && n.props.testId === 'navigation-container',
+    );
 
     expect(rendered.toJSON()).toBeTruthy();
     expect(loader.length).toBe(0);

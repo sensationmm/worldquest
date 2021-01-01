@@ -28,6 +28,9 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "users",
   },
+  clue_tokens: {
+    type: Number,
+  }
 });
 
 module.exports = User = mongoose.model("users", UserSchema);

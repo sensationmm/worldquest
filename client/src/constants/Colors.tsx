@@ -5,5 +5,11 @@ export default {
   },
   basic: {
     white: '#ffffff',
+    shadow: '#444444',
+    border: '#cccccc',
+    error: '#660000',
+  },
+  background: {
+    error: '#b74848',
   },
 };
