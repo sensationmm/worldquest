@@ -15,12 +15,9 @@ const AccordionBox: React.FC<AccordionBoxProps> = ({ children, ...rest }) => {
   return (
     <Box
       {...rest}
+      showContent={isOpen}
       action={
-        <TouchableHighlight
-          style={Styled.expander}
-          underlayColor={Colors.basic.white}
-          onPress={() => setIsOpen(!isOpen)}
-        >
+        <TouchableHighlight style={Styled.expander} underlayColor={Colors.basic.white} onPress={() => setIsOpen(!isOpen)}>
           <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={() => setIsOpen(!isOpen)} />
         </TouchableHighlight>
       }

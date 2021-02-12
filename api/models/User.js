@@ -21,6 +21,9 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  last_logged_in: {
+    type: Date,
+  },
   last_played_at: {
     type: Date,
   },

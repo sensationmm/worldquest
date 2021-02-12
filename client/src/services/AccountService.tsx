@@ -7,8 +7,8 @@ class AccountService extends BaseService {
       method: 'post',
       unauthed: true,
       data: {
-        email: email,
-        password: password,
+        email,
+        password,
       },
     };
 

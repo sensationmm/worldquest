@@ -1,24 +1,30 @@
-export type Riddle = {
+type RiddleBase = {
   id: string;
-  progressId: string;
   order: number;
   question: string[];
+};
+
+type Guess = {
+  guessedAt: Date;
+  value: string;
+};
+
+export interface Riddle extends RiddleBase {
+  progressId: string;
   clue1?: string;
   clue2?: string;
   clue3?: string;
   clueTokens: number;
-};
+  guesses: Guess[];
+}
 
-type CompletedRiddle = {
-  id: string;
-  question: string[];
+interface CompletedRiddle extends RiddleBase {
   answer: string;
-  order: number;
   clue1: string;
   clue2: string;
   clue3: string;
   completedAt: Date;
   cluesUsed: number;
-};
+}
 
 export type CompletedRiddles = CompletedRiddle[];

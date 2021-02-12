@@ -26,4 +26,17 @@ export default EStyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
+  guessStatus: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  guess: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderColor: Colors.basic.border,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 });

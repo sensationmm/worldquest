@@ -8,7 +8,7 @@ import Styled from './styles';
 
 import { BoxProps, CoreBoxProps } from './box.types';
 
-const Box: React.FC<BoxProps> = ({ children, title, icon, action, centered = false, isError = false }) => {
+const Box: React.FC<BoxProps> = ({ children, title, icon, action, centered = false, isError = false, showContent = true }) => {
   const checkChildArray = Array.isArray(children) ? onlyUnique(children) : [];
   const isEmpty = !children || (checkChildArray.length === 1 && !checkChildArray[0]);
 
@@ -17,7 +17,7 @@ const Box: React.FC<BoxProps> = ({ children, title, icon, action, centered = fal
       style={classNames(Styled.main, centered && Styled.centered, isError && Styled.error, isEmpty && Styled.empty)}
     >
       {(title || icon) && (
-        <View style={Styled.titleOuter}>
+        <View style={classNames(Styled.titleOuter, showContent && Styled.titleMargined)}>
           <View style={classNames(Styled.title, action && Styled.titlePadded)}>
             {icon && <Image style={Styled.icon} accessibilityLabel={title} source={icon} />}
             {title && <Text style={Styled.titleText}>{title}</Text>}

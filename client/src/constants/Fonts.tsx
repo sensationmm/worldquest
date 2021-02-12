@@ -41,4 +41,9 @@ export default {
   riddle: {
     fontSize: 30,
   },
+  guess: {
+    ...base,
+    fontSize: 30,
+    color: Colors.brand.primary,
+  },
 } as TextStyleExport;

@@ -11,6 +11,7 @@ export default StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 20,
   },
   buttonText: {
     color: Colors.basic.white,

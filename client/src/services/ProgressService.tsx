@@ -8,7 +8,7 @@ class ProgressService extends BaseService {
     };
 
     return this.doRequest(config);
-  }
+  };
 
   completed = () => {
     const config = {
@@ -17,7 +17,7 @@ class ProgressService extends BaseService {
     };
 
     return this.doRequest(config);
-  }
+  };
 
   clue = (progressId: string) => {
     const config = {
@@ -30,7 +30,22 @@ class ProgressService extends BaseService {
     };
 
     return this.doRequest(config);
-  }
+  };
+
+  guess = (progressId: string, riddleId: string, answer: string) => {
+    const config = {
+      url: 'progress/guess',
+      unauthed: false,
+      method: 'post',
+      data: {
+        progressId,
+        riddleId,
+        answer,
+      },
+    };
+
+    return this.doRequest(config);
+  };
 }
 
 export default ProgressService;

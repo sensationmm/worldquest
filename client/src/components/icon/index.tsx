@@ -3,26 +3,49 @@ import React from 'react';
 
 import Colors from '../../constants/Colors';
 
+enum IconSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+  LARGE = 'large',
+}
+
 interface IconProps {
   name: string;
   focused?: boolean;
-  large?: boolean;
+  color?: string;
+  size?: IconSize;
 }
 
-const Icon: React.FC<IconProps> = ({ name, focused = false, large = false }) => {
-  const color = focused ? Colors.basic.white : Colors.brand.secondary;
-  const size = large ? 50 : 24;
-  const margin = large ? 0 : 26;
+const Icon: React.FC<IconProps> = ({ name, focused = false, size = 'small', color = Colors.brand.secondary }) => {
+  const iconColor = focused ? Colors.basic.white : color;
+  let iconSize;
+  let iconMargin;
+
+  switch (size) {
+    case IconSize.LARGE:
+      iconSize = 75;
+      break;
+    case IconSize.MEDIUM:
+      iconSize = 50;
+      iconMargin = 0;
+      break;
+    case IconSize.SMALL:
+    default:
+      iconSize = 24;
+      iconMargin = 26;
+      break;
+  }
 
   return (
     <FontAwesome5
       name={name}
-      size={size}
-      color={color}
+      size={iconSize}
+      color={iconColor}
       style={{
-        marginTop: margin,
-        height: size,
-        width: size + 6,
+        marginTop: iconMargin,
+        marginBottom: iconMargin,
+        height: iconSize,
+        width: iconSize + 6,
         textAlign: 'center',
       }}
       solid

@@ -5,6 +5,7 @@ import Fonts from '../../constants/Fonts';
 
 export default StyleSheet.create({
   main: {
+    position: 'relative',
     backgroundColor: Colors.basic.white,
     borderRadius: 10,
     display: 'flex',
@@ -35,6 +36,9 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     alignContent: 'center',
+  },
+  titleMargined: {
+    marginBottom: 20,
   },
   action: {
     display: 'flex',

@@ -1,4 +1,4 @@
 {
-  "tslint.configFile": "client/tslint.json",
+  "tslint.configFile": "tslint.json",
   "editor.formatOnSave": true
 }

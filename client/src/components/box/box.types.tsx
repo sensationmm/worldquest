@@ -10,4 +10,5 @@ export interface BoxProps extends CoreBoxProps {
   icon?: ImageSourcePropType;
   isError?: boolean;
   action?: JSX.Element;
+  showContent?: boolean;
 }

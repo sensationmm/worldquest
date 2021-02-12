@@ -94,6 +94,9 @@ router.post("/login", (req, res) => {
       .compare(password, user.password)
       .then((isMatch) => {
         if (isMatch) {
+          user.last_logged_in = Date.now();
+          user.save();
+          
           // Create JWT payload
           const payload = {
             id: user.id,

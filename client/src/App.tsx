@@ -42,7 +42,7 @@ const App = () => {
     const iconName = getByValue(tabsArray, 'name', route.name).icon;
     const iconLarge = route.name === 'Home';
 
-    return <Icon name={iconName} large={iconLarge} focused={focused} />;
+    return <Icon name={iconName} size={iconLarge ? 'medium' : 'small'} focused={focused} />;
   };
 
   const reauth = async () => {
