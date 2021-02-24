@@ -1,5 +1,4 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { AppLoading } from 'expo';
 import React from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
@@ -27,10 +26,8 @@ describe('App', () => {
   it('renders without crashing if fonts fail to load', () => {
     const rendered = renderer.create(<App />);
     const element = rendered.root.findByType(View);
-    const loader = element.findAll((n) => n.type === AppLoading && n.props.testId === 'app-loading');
-    const navigationContainer = element.findAll(
-      (n) => n.type === NavigationContainer && n.props.testId === 'navigation-container',
-    );
+    // const loader = element.findAll((n) => n.type === AppLoading && n.props.testId === 'app-loading');
+    const navigationContainer = element.findAll((n) => n.type === NavigationContainer && n.props.testId === 'navigation-container');
 
     expect(rendered.toJSON()).toBeTruthy();
     expect(loader.length).toBe(1);
@@ -40,10 +37,8 @@ describe('App', () => {
   it('renders without crashing if fonts load', () => {
     const rendered = renderer.create(<App />);
     const element = rendered.root.findByType(View);
-    const loader = element.findAll((n) => n.type === AppLoading && n.props.testId === 'app-loading');
-    const navigationContainer = element.findAll(
-      (n) => n.type === NavigationContainer && n.props.testId === 'navigation-container',
-    );
+    // const loader = element.findAll((n) => n.type === AppLoading && n.props.testId === 'app-loading');
+    const navigationContainer = element.findAll((n) => n.type === NavigationContainer && n.props.testId === 'navigation-container');
 
     expect(rendered.toJSON()).toBeTruthy();
     expect(loader.length).toBe(0);

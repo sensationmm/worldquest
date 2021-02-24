@@ -1,7 +1,6 @@
 import { FredokaOne_400Regular, useFonts } from '@expo-google-fonts/fredoka-one';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { AppLoading } from 'expo';
 import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -72,9 +71,7 @@ const App = () => {
   return (
     <>
       {!resourcesLoaded ? (
-        <Main>
-          <AppLoading testId={'app-loading'} />
-        </Main>
+        <Main>{/* <AppLoading testId={'app-loading'} /> */}</Main>
       ) : (
         <Main>
           <NavigationContainer theme={theme} testId={'navigation-container'}>
