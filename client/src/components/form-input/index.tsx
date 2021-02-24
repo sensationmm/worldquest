@@ -8,11 +8,12 @@ import Styled from './styles';
 interface FormInputProps {
   label: string;
   value: string;
+  placeholder: string;
   isPassword?: boolean;
   onChange: (val: string) => void;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ label, value, onChange, isPassword = false }) => {
+const FormInput: React.FC<FormInputProps> = ({ label, value, onChange, placeholder, isPassword = false }) => {
   return (
     <View style={Styled.main}>
       <Text style={Styled.label}>{label}</Text>
@@ -20,6 +21,7 @@ const FormInput: React.FC<FormInputProps> = ({ label, value, onChange, isPasswor
         <TextInput
           style={Fonts.input}
           value={value}
+          placeholder={placeholder}
           secureTextEntry={isPassword}
           onChangeText={onChange}
           autoCapitalize={'none'}

@@ -13,6 +13,7 @@ export default EStyleSheet.create({
   },
   'hint:last-child': {
     paddingBottom: 0,
+    backgroundColor: 'blue',
   },
   newHintTitle: {
     ...Fonts.bodySmall,

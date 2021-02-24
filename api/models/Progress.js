@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProgressSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
   },
   riddle: {
     type: Schema.Types.ObjectId,
-    ref: "riddles",
+    ref: 'riddles',
   },
   clues: {
     type: Number,
@@ -21,4 +21,4 @@ const ProgressSchema = new Schema({
   },
 });
 
-module.exports = Progress = mongoose.model("progress", ProgressSchema);
+module.exports = Progress = mongoose.model('progress', ProgressSchema);

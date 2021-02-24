@@ -1,12 +1,13 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { ScreenProps } from '../App';
+import PageHeader from '../components/page-header';
 
 const Stats: React.FC<ScreenProps> = () => {
   return (
     <View>
-      <Text>Stats</Text>
+      <PageHeader title={'Game Stats'} />
     </View>
   );
 };

@@ -10,8 +10,11 @@ import { CompletedRiddles } from '../types/Riddle.types';
 import progressService from '../services/ProgressService';
 
 import { ScreenProps } from '../App';
+import Box from '../components/box';
+import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import Vars from '../constants/Vars';
+
 import Styled from './Progress.styles';
 
 const Progress: React.FC<ScreenProps> = ({ setIsLoading }) => {
@@ -27,14 +30,47 @@ const Progress: React.FC<ScreenProps> = ({ setIsLoading }) => {
   };
 
   useEffect(() => {
-    if (!completed) {
-      getCompletedRiddles();
-    }
+    getCompletedRiddles();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log('unmount');
+      setCompleted(undefined);
+    };
+  }, []);
+
+  const numCompleted = completed?.length || 0;
+  const numGuesses = completed?.reduce((accumulator, currentValue) => accumulator + currentValue.guesses, 0) || 0;
+  const numCluesUsed = completed?.reduce((accumulator, currentValue) => accumulator + currentValue.cluesUsed, 0) || 0;
 
   return (
     <View>
-      <PageHeader title={'Solutions'} />
+      <PageHeader title={'Progress'} />
+
+      <View style={Styled.summary}>
+        <Box centered>
+          <Text>Completed</Text>
+          <Text style={Fonts.guess}>{numCompleted}</Text>
+          {!!numCompleted && <Text style={{ ...Fonts.guess, ...Fonts.body }}>Stages</Text>}
+        </Box>
+        <Box centered>
+          <Text>Guesses</Text>
+          <Text style={Fonts.guess}>{numGuesses}</Text>
+          {completed && <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numGuesses / numCompleted).toFixed(1)}</Text>}
+        </Box>
+        <Box centered>
+          <Text>Clues Used</Text>
+          <Text style={Fonts.guess}>{numCluesUsed}</Text>
+          {completed && <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numCluesUsed / numCompleted).toFixed(1)}</Text>}
+        </Box>
+      </View>
+
+      {(!completed || completed.length === 0) && (
+        <Text style={{ ...Fonts.riddle, color: Colors.basic.white, textAlign: 'center' }}>
+          Your completed stages will appear here as you progress through the Quest
+        </Text>
+      )}
 
       {completed &&
         completed.map((riddle, count) => {
@@ -50,8 +86,13 @@ const Progress: React.FC<ScreenProps> = ({ setIsLoading }) => {
               </View>
 
               <View style={Styled.section}>
+                <Text style={Fonts.bold}>Guesses: </Text>
+                <Text>{riddle.guesses}</Text>
+              </View>
+
+              <View style={Styled.section}>
                 <Text style={Fonts.bold}>Clues used: </Text>
-                <Text>{riddle.cluesUsed}</Text>
+                <Text>{riddle.cluesUsed} / 3</Text>
               </View>
             </AccordionBox>
           );

@@ -16,6 +16,8 @@ export interface Riddle extends RiddleBase {
   clue3?: string;
   clueTokens: number;
   guesses: Guess[];
+  completedAt?: Date;
+  lastPlayedAt?: Date;
 }
 
 interface CompletedRiddle extends RiddleBase {
@@ -25,6 +27,7 @@ interface CompletedRiddle extends RiddleBase {
   clue3: string;
   completedAt: Date;
   cluesUsed: number;
+  guesses: number;
 }
 
 export type CompletedRiddles = CompletedRiddle[];

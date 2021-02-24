@@ -1,7 +1,7 @@
 import { TextStyle } from 'react-native';
 import Colors from '../constants/Colors';
 
-const base = {
+const Fredoka = {
   fontFamily: 'FredokaOne_400Regular',
   letterSpacing: 1,
   textTransform: 'uppercase',
@@ -22,11 +22,11 @@ export default {
     fontWeight: 'bold',
   },
   subHeading: {
-    ...base,
+    ...Fredoka,
     fontSize: 20,
   },
   heading: {
-    ...base,
+    ...Fredoka,
     fontSize: 24,
   },
   input: {
@@ -35,15 +35,16 @@ export default {
     fontWeight: 'bold',
   },
   label: {
-    ...base,
+    ...Fredoka,
     fontSize: 14,
   },
   riddle: {
     fontSize: 30,
   },
   guess: {
-    ...base,
+    ...Fredoka,
     fontSize: 30,
+    textAlign: 'center',
     color: Colors.brand.primary,
   },
 } as TextStyleExport;

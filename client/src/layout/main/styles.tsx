@@ -5,7 +5,6 @@ import Colors from '../../constants/Colors';
 export default StyleSheet.create({
   main: {
     height: '100%',
-    display: 'flex',
     backgroundColor: Colors.brand.primary,
   },
   logo: {
@@ -21,8 +20,7 @@ export default StyleSheet.create({
     paddingRight: 20,
   },
   body: {
-    display: 'flex',
-    height: '85%',
+    height: '83%',
     marginLeft: 15,
     marginRight: 15,
     borderRadius: 10,

@@ -32,7 +32,7 @@ const Icon: React.FC<IconProps> = ({ name, focused = false, size = 'small', colo
     case IconSize.SMALL:
     default:
       iconSize = 24;
-      iconMargin = 26;
+      iconMargin = 13;
       break;
   }
 

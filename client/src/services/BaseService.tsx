@@ -37,7 +37,7 @@ class BaseService {
         Authorization: token ? token : undefined,
       },
     };
-  }
+  };
 
   doRequest = async (config: ConfigType, callback?: (res: any) => void) => {
     const configData = {
@@ -52,7 +52,7 @@ class BaseService {
           callback(response);
         }
 
-        console.log(config.url.toUpperCase());
+        console.log(`${config.url.toUpperCase()} SUCCESS`);
         if (config.data) {
           console.log(config.data);
         }
@@ -65,19 +65,19 @@ class BaseService {
         };
       })
       .catch((error: any) => {
-        console.log(config.url.toUpperCase());
+        console.log(`${config.url.toUpperCase()} FAILURE`);
         if (config.data) {
           console.log(config.data);
         }
-        console.log(error.response.status);
-        console.log(error.response.data);
+        console.log(error.status);
+        console.log(error.data);
 
         return {
-          status: error.response.status,
-          msg: error.response.data.msg,
+          status: error?.status,
+          msg: error?.data?.msg,
         };
       });
-  }
+  };
 }
 
 export default BaseService;

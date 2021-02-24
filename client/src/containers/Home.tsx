@@ -7,7 +7,7 @@ import Button from '../components/button';
 import FormInput from '../components/form-input';
 import Icon from '../components/icon';
 import PageHeader from '../components/page-header';
-import { formatDate } from '../utils/date';
+import { dateNoTime } from '../utils/date';
 
 import { Riddle } from '../types/Riddle.types';
 
@@ -34,6 +34,30 @@ const Home: React.FC<ScreenProps> = ({ setIsLoading }) => {
   const [showStatus, setShowStatus] = useState(false);
   let statusTimeout: number;
 
+  useEffect(() => {
+    if (!current) {
+      getCurrentRiddle();
+    }
+
+    return () => {
+      clearTimeout(statusTimeout);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!!current?.completedAt) {
+      setIsCorrect(true);
+      setHasGuessed(true);
+      setShowStatus(true);
+      setGuess(current.guesses[0].toString());
+    } else if (current?.lastPlayedAt && new Date(current?.lastPlayedAt) > dateNoTime(new Date())) {
+      setIsCorrect(false);
+      setHasGuessed(true);
+      setShowStatus(true);
+      setGuess(current.guesses[0].toString());
+    }
+  }, [current?.completedAt, current?.lastPlayedAt]);
+
   const getCurrentRiddle = async () => {
     setIsLoading(true);
     await ProgressService.current().then((res) => {
@@ -55,10 +79,20 @@ const Home: React.FC<ScreenProps> = ({ setIsLoading }) => {
   const solveRiddle = async () => {
     if (current) {
       setIsLoading(true);
-      await ProgressService.guess(current.progressId, current.id, guess).then(({ msg }) => {
+      await ProgressService.guess(current.progressId, current.id, guess).then((res) => {
+        const { msg, guesses } = res.data;
+
         setHasGuessed(true);
         setIsLoading(false);
         setIsCorrect(msg === 'CORRECT' ? true : false);
+
+        if (msg === 'INCORRECT') {
+          console.log('setCurrent', guesses);
+          setCurrent({
+            ...current,
+            guesses: guesses,
+          });
+        }
 
         statusTimeout = setTimeout(() => {
           setShowStatus(true);
@@ -66,16 +100,6 @@ const Home: React.FC<ScreenProps> = ({ setIsLoading }) => {
       });
     }
   };
-
-  useEffect(() => {
-    if (!current) {
-      getCurrentRiddle();
-    }
-
-    return () => {
-      clearTimeout(statusTimeout);
-    };
-  }, []);
 
   let cluesUsed = 0;
 
@@ -127,8 +151,8 @@ const Home: React.FC<ScreenProps> = ({ setIsLoading }) => {
 
       {!hasGuessed ? (
         <>
-          <FormInput label={'Guess'} value={guess} onChange={setGuess} />
-          <Button onClick={solveRiddle} label={'Check Answer'} />
+          <FormInput value={guess} onChange={setGuess} placeholder={'Enter your guess...'} />
+          <Button onClick={solveRiddle} label={'Check Answer'} disabled={!guess} />
         </>
       ) : (
         <Box centered>
@@ -164,18 +188,17 @@ const Home: React.FC<ScreenProps> = ({ setIsLoading }) => {
         </Box>
       )}
 
-      {(!showStatus || !isCorrect) && current?.guesses && current.guesses.length > 0 && (
+      {!(hasGuessed && !showStatus) && !current?.completedAt && !isCorrect && current?.guesses && current.guesses.length > 0 && (
         <AccordionBox title={`${current.guesses.length} ${current.guesses.length > 1 ? 'Guesses' : 'Guess'}`}>
           {current.guesses.map((oldGuess, count) => (
             <View key={`guess-${count}`} style={Styled.guess}>
-              <Text style={Fonts.bold}>{oldGuess.value}</Text>
-              <Text>{formatDate(oldGuess.guessedAt)}</Text>
+              <Text style={Fonts.bold}>{oldGuess}</Text>
             </View>
           ))}
         </AccordionBox>
       )}
 
-      {(!showStatus || !isCorrect) && (
+      {!(hasGuessed && !showStatus) && !current?.completedAt && !isCorrect && (
         <Box
           title={'Clues'}
           action={

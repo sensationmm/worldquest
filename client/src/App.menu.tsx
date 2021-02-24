@@ -15,7 +15,7 @@ export const tabs = [
 ];
 
 export const tabsAuth = [
-  { name: 'Log In', component: Login, icon: 'user' },
   { name: 'Register', component: Register, icon: 'user-plus' },
+  { name: 'Log In', component: Login, icon: 'user' },
   { name: 'Info', component: Info, icon: 'info-circle' },
 ];

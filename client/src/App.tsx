@@ -84,6 +84,7 @@ const App = () => {
                 barStyle={styles.tabs}
                 labeled={false}
                 screenOptions={({ route }: { route: any }) => ({
+                  scrollEnabled: true,
                   tabBarIcon: ({ focused }: { focused: boolean }) => {
                     return icon(tabs, route, focused);
                   },
@@ -99,7 +100,7 @@ const App = () => {
               </Tab.Navigator>
             ) : (
               <Tab.Navigator
-                initialRouteName={'Register'}
+                initialRouteName={'Log In'}
                 barStyle={styles.tabs}
                 labeled={false}
                 screenOptions={({ route }: { route: any }) => ({
