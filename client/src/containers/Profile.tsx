@@ -10,6 +10,7 @@ import Box from '../components/box';
 import Button from '../components/button';
 import PageHeader from '../components/page-header';
 import Fonts from '../constants/Fonts';
+import { formatDate } from '../utils/date';
 
 import Styled from './Profile.styles';
 
@@ -39,19 +40,29 @@ const Profile: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
     await SecureStore.deleteItemAsync('jwt_token');
   };
 
-  console.log('currentUser', currentUser);
+  const buyTokens = async (num: string) => {
+    const numClues = parseInt(num, 10);
+    setIsLoading(true);
+    await AccountService.buyClues(numClues).then(() => {
+      setCurrentUser({
+        ...currentUser,
+        clueTokens: currentUser?.clueTokens + numClues,
+      });
+      setIsLoading(false);
+    });
+  };
 
   return (
     <View>
       <PageHeader title={'My Profile'} />
 
-      {currentUser && (
-        <View style={Styled.avatarContainer}>
-          <Image style={Styled.avatar} source={{ uri: currentUser?.avatar }} />
-        </View>
-      )}
-
       <Box title={'Personal Details'}>
+      {currentUser && (
+          <>
+        <View style={Styled.avatarContainer}>
+              <Image style={Styled.avatar} source={{ uri: `https:${currentUser?.avatar}` }} />
+        </View>
+            <View>
         <View style={Styled.section}>
           <Text style={Fonts.bold}>Name: </Text>
           <Text>{currentUser?.name}</Text>
@@ -59,6 +70,34 @@ const Profile: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
         <View style={Styled.section}>
           <Text style={Fonts.bold}>Email: </Text>
           <Text>{currentUser?.email}</Text>
+        </View>
+              <View style={Styled.section}>
+                <Text style={Fonts.bold}>Member since: </Text>
+                <Text>{formatDate(currentUser?.createdAt)}</Text>
+              </View>
+              <View style={Styled.section}>
+                <Text style={Fonts.bold}>Last played: </Text>
+                <Text>{formatDate(currentUser?.lastPlayedAt)}</Text>
+              </View>
+            </View>
+          </>
+        )}
+      </Box>
+
+      <Box title={'Clue Tokens'}>
+        <View style={Styled.summary}>
+          <View style={Styled.clueTokens}>
+            <Text style={Fonts.subHeading}>Owned</Text>
+            <Text style={Fonts.guess}>{currentUser?.clueTokens}</Text>
+          </View>
+
+          <View style={Styled.buyButtons}>
+            {['1', '5', '10'].map((item) => (
+              <View style={Styled.buyButton}>
+                <Button key={`buy-${item}`} small onClick={() => buyTokens(item)} label={`Buy ${item} for £0`} />
+              </View>
+            ))}
+          </View>
         </View>
       </Box>
 

@@ -25,6 +25,7 @@ export default StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     width: 'auto',
+    marginBottom: 0,
   },
   disabled: {
     opacity: 0.2,

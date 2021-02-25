@@ -23,6 +23,19 @@ class AccountService extends BaseService {
 
     return this.doRequest(config);
   };
+
+  buyClues = (num: number) => {
+    const config = {
+      url: 'accounts/buyClues',
+      method: 'post',
+      unauthed: false,
+      data: {
+        numClues: num,
+      },
+    };
+
+    return this.doRequest(config);
+  };
 }
 
 export default AccountService;

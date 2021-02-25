@@ -73,7 +73,7 @@
     "no-parameter-properties": false,
     "one-line": [true, "check-open-brace", "check-catch", "check-else", "check-finally", "check-whitespace"],
     "quotemark": [true, "single", "avoid-escape"],
-    "semicolon": [true, "always", "ignore-interfaces"],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
     "variable-name": [true, "allow-leading-underscore", "ban-keywords"],
     "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"]
   }
