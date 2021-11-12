@@ -1,15 +1,17 @@
 import { StyleSheet } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import { getTheme } from '../../utils/theme';
 
 export default StyleSheet.create({
   main: {
     height: '100%',
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: getTheme().primary,
   },
   logo: {
     width: 100,
     height: 67,
+    color: getTheme().secondary,
   },
   header: {
     display: 'flex',

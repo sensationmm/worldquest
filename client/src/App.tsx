@@ -21,6 +21,11 @@ export type ScreenProps = {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
+export interface FunctionalScreenProps extends ScreenProps {
+  refetchData: boolean;
+  setRefetchData: Dispatch<SetStateAction<boolean>>;
+}
+
 const Tab = createMaterialBottomTabNavigator();
 
 EStyleSheet.build();
@@ -30,6 +35,7 @@ const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [refetchData, setRefetchData] = useState(false);
 
   const [fontsLoaded] = useFonts({
     FredokaOne_400Regular,
@@ -81,7 +87,6 @@ const App = () => {
                 barStyle={styles.tabs}
                 labeled={false}
                 screenOptions={({ route }: { route: any }) => ({
-                  scrollEnabled: true,
                   tabBarIcon: ({ focused }: { focused: boolean }) => {
                     return icon(tabs, route, focused);
                   },
@@ -90,7 +95,14 @@ const App = () => {
                 {tabs.map((tab) => {
                   return (
                     <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
-                      {() => <tab.component setIsLoading={setIsLoading} setIsLoggedIn={setIsLoggedIn} />}
+                      {() => (
+                        <tab.component
+                          setIsLoading={setIsLoading}
+                          setIsLoggedIn={setIsLoggedIn}
+                          refetchData={refetchData}
+                          setRefetchData={setRefetchData}
+                        />
+                      )}
                     </Tab.Screen>
                   );
                 })}

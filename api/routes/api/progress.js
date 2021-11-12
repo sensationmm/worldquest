@@ -8,7 +8,9 @@ const Riddle = require('../../models/Riddle');
 const User = require('../../models/User');
 
 const GuessesPayload = (guesses) => {
-  return guesses.map((guess) => guess.value);
+  return guesses.map((guess) => {
+    return { value: guess.value, guessedAt: guess.guessed_at };
+  });
 };
 
 const RiddlePayload = (user, riddle, progress, guesses) => {

@@ -40,4 +40,13 @@ export default EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  tabletCols: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  tabletCol: {
+    width: '49%',
+  },
 });

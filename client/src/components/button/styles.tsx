@@ -2,10 +2,11 @@ import { StyleSheet } from 'react-native';
 
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
+import { getTheme } from '../../utils/theme';
 
 export default StyleSheet.create({
   main: {
-    backgroundColor: Colors.brand.secondary,
+    backgroundColor: getTheme().secondary,
     borderRadius: 20,
     padding: 20,
     display: 'flex',

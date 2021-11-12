@@ -2,6 +2,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 
 import Colors from '../../constants/Colors';
+import { getTheme } from '../../utils/theme';
 
 enum IconSize {
   SMALL = 'small',
@@ -16,7 +17,7 @@ interface IconProps {
   size?: IconSize;
 }
 
-const Icon: React.FC<IconProps> = ({ name, focused = false, size = 'small', color = Colors.brand.secondary }) => {
+const Icon: React.FC<IconProps> = ({ name, focused = false, size = 'small', color = getTheme().secondary }) => {
   const iconColor = focused ? Colors.basic.white : color;
   let iconSize;
   let iconMargin;

@@ -1,5 +1,5 @@
 import { TextStyle } from 'react-native';
-import Colors from '../constants/Colors';
+import { getTheme } from '../utils/theme';
 
 const Fredoka = {
   fontFamily: 'FredokaOne_400Regular',
@@ -31,7 +31,7 @@ export default {
   },
   input: {
     fontSize: 20,
-    color: Colors.brand.primary,
+    color: getTheme().primary,
     fontWeight: 'bold',
   },
   label: {
@@ -39,12 +39,12 @@ export default {
     fontSize: 14,
   },
   riddle: {
-    fontSize: 30,
+    fontSize: 20,
   },
   guess: {
     ...Fredoka,
     fontSize: 30,
     textAlign: 'center',
-    color: Colors.brand.primary,
+    color: getTheme().primary,
   },
 } as TextStyleExport;

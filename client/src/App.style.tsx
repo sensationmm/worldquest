@@ -1,10 +1,10 @@
 import { DefaultTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
-import Colors from './constants/Colors';
+import { getTheme } from './utils/theme';
 
 export const styles = StyleSheet.create({
   tabs: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: getTheme().primary,
     shadowOpacity: 0,
   },
 });
@@ -13,6 +13,6 @@ export const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: Colors.brand.primary,
+    background: getTheme().primary,
   },
 };
