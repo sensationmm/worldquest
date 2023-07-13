@@ -47,4 +47,10 @@ export default {
     textAlign: 'center',
     color: getTheme().primary,
   },
+  stat: {
+    ...Fredoka,
+    fontSize: 50,
+    textAlign: 'center',
+    color: getTheme().primary,
+  },
 } as TextStyleExport;

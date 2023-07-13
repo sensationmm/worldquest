@@ -4,7 +4,7 @@ type RiddleBase = {
   question: string[];
 };
 
-type Guess = {
+export type Guess = {
   guessedAt: Date;
   value: string;
 };

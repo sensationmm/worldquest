@@ -33,7 +33,7 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
   });*/
   const ProgressService = new progressService();
   const [current, setCurrent] = useState<Riddle>();
-  const [guess, setGuess] = useState<Guess>('');
+  const [guess, setGuess] = useState<Guess['value']>('');
   const [hasGuessed, setHasGuessed] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
@@ -126,13 +126,14 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
 
   let spinValue = new Animated.Value(0);
 
+  // TODO: replace with CSS animation
   Animated.loop(
     Animated.timing(spinValue, {
       toValue: 1,
       duration: 750,
       easing: Easing.linear,
       useNativeDriver: true,
-    }),
+    })
   ).start();
 
   const spin = spinValue.interpolate({
@@ -168,7 +169,7 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
           ) : (
             <Box centered>
               <Text style={Fonts.bold}>You guessed</Text>
-              <Text style={Fonts.guess}>{guess.value}</Text>
+              <Text style={Fonts.guess}>{guess}</Text>
 
               <View style={Styled.guessStatus}>
                 {!showStatus ? (
@@ -203,7 +204,7 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
 
         <View style={isTablet && Styled.tabletCol}>
           {!(hasGuessed && !showStatus) && current?.guesses && current.guesses.length > 0 && (
-            <AccordionBox title={`${current.guesses.length} ${current.guesses.length > 1 ? 'Guesses' : 'Guess'}`}>
+            <AccordionBox title={`${current.guesses.length} Guess${current.guesses.length > 1 && 'es'}`}>
               {current.guesses.map((oldGuess, count) => (
                 <View key={`guess-${count}`} style={Styled.guess}>
                   <Text style={Fonts.bold}>{oldGuess.value}</Text>
@@ -219,7 +220,12 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
               action={
                 !isCorrect ? (
                   clueAvailable ? (
-                    <Button small onClick={getNextClue} label={`Get clue ${cluesUsed + 1} of 3`} disabled={noClueTokens} />
+                    <Button
+                      small
+                      onClick={getNextClue}
+                      label={`Use clue ${cluesUsed + 1} of 3`}
+                      disabled={noClueTokens}
+                    />
                   ) : (
                     <Text style={Styled.newHintTitle}>All clues used</Text>
                   )

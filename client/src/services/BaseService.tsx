@@ -69,8 +69,9 @@ class BaseService {
         if (config.data) {
           console.log(config.data);
         }
-        console.log(error.status);
-        console.log(error.data);
+        console.log('error', error);
+        console.log('error.status', error.status);
+        console.log('error.data', error.data);
 
         return {
           status: error?.status,

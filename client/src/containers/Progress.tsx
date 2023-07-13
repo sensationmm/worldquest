@@ -47,21 +47,25 @@ const Progress: React.FC<FunctionalScreenProps> = ({ setIsLoading, refetchData, 
 
       <View style={Styled.summary}>
         <Box centered>
-          <Text>Completed</Text>
+          <Text style={Fonts.bold}>Completed</Text>
           <Text style={Fonts.guess}>
             {numCompleted}/{Vars.totalRiddles}
           </Text>
           {!!numCompleted && <Text style={{ ...Fonts.guess, ...Fonts.body }}>Stages</Text>}
         </Box>
         <Box centered>
-          <Text>Guesses</Text>
+          <Text style={Fonts.bold}>Guesses</Text>
           <Text style={Fonts.guess}>{numGuesses}</Text>
-          {completed && numGuesses > 0 && <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numGuesses / numCompleted).toFixed(1)}</Text>}
+          {completed && numGuesses > 0 && (
+            <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numGuesses / numCompleted).toFixed(1)}</Text>
+          )}
         </Box>
         <Box centered>
-          <Text>Clues Used</Text>
+          <Text style={Fonts.bold}>Clues Used</Text>
           <Text style={Fonts.guess}>{numCluesUsed}</Text>
-          {completed && numCluesUsed > 0 && <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numCluesUsed / numCompleted).toFixed(1)}</Text>}
+          {completed && numCluesUsed > 0 && (
+            <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numCluesUsed / numCompleted).toFixed(1)}</Text>
+          )}
         </Box>
       </View>
 

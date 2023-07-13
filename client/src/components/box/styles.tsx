@@ -10,7 +10,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     display: 'flex',
     flexDirection: 'column',
-    padding: 20,
+    padding: 15,
     marginBottom: 20,
   },
   error: {

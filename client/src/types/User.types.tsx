@@ -5,5 +5,5 @@ export type User = {
   avatar: string;
   createdAt: Date;
   lastPlayedAt: Date;
-  clueTokens: Number;
+  clueTokens: number;
 };

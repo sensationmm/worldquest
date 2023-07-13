@@ -49,26 +49,28 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
 
   const buyTokens = async (numClues: number) => {
     setIsLoading(true);
-    await AccountService.buyClues(numClues).then(() => {
-      setCurrentUser({
-        ...currentUser,
-        clueTokens: currentUser?.clueTokens + numClues,
+    if (currentUser) {
+      await AccountService.buyClues(numClues).then(() => {
+        setCurrentUser({
+          ...currentUser,
+          clueTokens: currentUser.clueTokens + numClues,
+        });
+        setIsLoading(false);
       });
-      setIsLoading(false);
-    });
+    }
   };
 
   console.log('Profile');
 
   return (
     <View>
-      <PageHeader title={'My Profile'} />
+      <PageHeader title={'My Profile!'} />
 
       <Box title={'Personal Details'}>
         {currentUser && (
           <>
             <View style={Styled.avatarContainer}>
-              <Image style={Styled.avatar} source={{ uri: `https:${currentUser?.avatar}` }} />
+              <Image style={Styled.avatar} source={{ uri: currentUser.avatar }} />
             </View>
             <View>
               <View style={Styled.section}>
@@ -95,8 +97,8 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
       <Box title={'Clue Tokens'}>
         <View style={Styled.summary}>
           <View style={Styled.clueTokens}>
-            <Text style={Fonts.subHeading}>Owned</Text>
-            <Text style={Fonts.guess}>{currentUser?.clueTokens}</Text>
+            <Text style={Fonts.stat}>{currentUser?.clueTokens}</Text>
+            <Text style={Fonts.subHeading}>Left</Text>
           </View>
 
           <View style={Styled.buyButtons}>
@@ -120,7 +122,10 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
                   {chunk.map((item: string, count: number) => {
                     const theme = Colors[item];
                     return (
-                      <View key={`swatch-${countChunk}-${count}`} style={{ ...Styled.themeSwatch, backgroundColor: theme.primary }}>
+                      <View
+                        key={`swatch-${countChunk}-${count}`}
+                        style={{ ...Styled.themeSwatch, backgroundColor: theme.primary }}
+                      >
                         <Logo style={{ color: theme.secondary }} />
                         {getTheme() === theme && (
                           <View style={Styled.themeCheckMark}>
