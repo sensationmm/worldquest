@@ -6,7 +6,7 @@ import Progress from './containers/Progress';
 import Register from './containers/Register';
 import Stats from './containers/Stats';
 
-export const tabs = [
+export const tabsMain = [
   { name: 'Progress', component: Progress, icon: 'tasks' },
   { name: 'Stats', component: Stats, icon: 'chart-line' },
   { name: 'Home', component: Home, icon: 'map-marked-alt' },

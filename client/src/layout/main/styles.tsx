@@ -5,6 +5,7 @@ import { getTheme } from '../../utils/theme';
 
 export default StyleSheet.create({
   main: {
+    flex: 1,
     height: '100%',
     backgroundColor: getTheme().primary,
   },
@@ -17,13 +18,12 @@ export default StyleSheet.create({
   header: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop: 40,
     paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
   },
   body: {
-    height: '83%',
+    flexGrow: 1,
     marginLeft: 15,
     marginRight: 15,
     borderRadius: 10,

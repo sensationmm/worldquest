@@ -4,12 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { ScrollView } from 'react-native';
 
 import Icon, { IconSize } from './components/icon';
 import Loader from './components/loader';
 import Main from './layout/main';
 
-import { tabs, tabsAuth } from './App.menu';
+import { tabsAuth, tabsMain } from './App.menu';
 import { styles, theme } from './App.style';
 
 import getByValue from './utils/getByValue';
@@ -74,6 +75,8 @@ const App = () => {
     reauth();
   }, []);
 
+  const tabs = isLoggedIn ? tabsMain : tabsAuth;
+
   return (
     <>
       {!resourcesLoaded ? (
@@ -81,52 +84,31 @@ const App = () => {
       ) : (
         <Main>
           <NavigationContainer theme={theme} testId={'navigation-container'}>
-            {isLoggedIn ? (
-              <Tab.Navigator
-                initialRouteName={'Home'}
-                barStyle={styles.tabs}
-                labeled={false}
-                screenOptions={({ route }: { route: any }) => ({
-                  tabBarIcon: ({ focused }: { focused: boolean }) => {
-                    return icon(tabs, route, focused);
-                  },
-                })}
-              >
-                {tabs.map((tab) => {
-                  return (
-                    <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
-                      {() => (
-                        <tab.component
-                          setIsLoading={setIsLoading}
-                          setIsLoggedIn={setIsLoggedIn}
-                          refetchData={refetchData}
-                          setRefetchData={setRefetchData}
-                        />
-                      )}
-                    </Tab.Screen>
-                  );
-                })}
-              </Tab.Navigator>
-            ) : (
-              <Tab.Navigator
-                initialRouteName={'Log In'}
-                barStyle={styles.tabs}
-                labeled={false}
-                screenOptions={({ route }: { route: any }) => ({
-                  tabBarIcon: ({ focused }: { focused: boolean }) => {
-                    return icon(tabsAuth, route, focused);
-                  },
-                })}
-              >
-                {tabsAuth.map((tab) => {
-                  return (
-                    <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
-                      {() => <tab.component setIsLoading={setIsLoading} setIsLoggedIn={setIsLoggedIn} />}
-                    </Tab.Screen>
-                  );
-                })}
-              </Tab.Navigator>
-            )}
+            <Tab.Navigator
+              initialRouteName={isLoggedIn ? 'Home' : 'Log In'}
+              barStyle={styles.tabs}
+              labeled={false}
+              screenOptions={({ route }: { route: any }) => ({
+                tabBarIcon: ({ focused }: { focused: boolean }) => {
+                  return icon(tabs, route, focused);
+                },
+              })}
+            >
+              {tabs.map((tab) => {
+                return (
+                  <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
+                    {() => (
+                      <tab.component
+                        setIsLoading={setIsLoading}
+                        setIsLoggedIn={setIsLoggedIn}
+                        refetchData={isLoggedIn ? refetchData : undefined}
+                        setRefetchData={isLoggedIn ? setRefetchData : undefined}
+                      />
+                    )}
+                  </Tab.Screen>
+                );
+              })}
+            </Tab.Navigator>
           </NavigationContainer>
           <Loader isLoading={isLoading} />
         </Main>
