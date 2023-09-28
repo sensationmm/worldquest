@@ -5,7 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import Icon from './components/icon';
+import Icon, { IconSize } from './components/icon';
 import Loader from './components/loader';
 import Main from './layout/main';
 
@@ -47,7 +47,7 @@ const App = () => {
     const iconName = getByValue(tabsArray, 'name', route.name).icon;
     const iconLarge = route.name === 'Home';
 
-    return <Icon name={iconName} size={iconLarge ? 'medium' : 'small'} focused={focused} />;
+    return <Icon name={iconName} size={iconLarge ? IconSize.MEDIUM : IconSize.SMALL} focused={focused} />;
   };
 
   const reauth = async () => {

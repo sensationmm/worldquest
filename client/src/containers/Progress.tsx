@@ -40,7 +40,6 @@ const Progress: React.FC<FunctionalScreenProps> = ({ setIsLoading, refetchData, 
   const numGuesses = completed?.reduce((accumulator, currentValue) => accumulator + currentValue.guesses, 0) || 0;
   const numCluesUsed = completed?.reduce((accumulator, currentValue) => accumulator + currentValue.cluesUsed, 0) || 0;
 
-  console.log('Progress');
   return (
     <ScrollView>
       <PageHeader title={'Progress'} />
@@ -84,7 +83,11 @@ const Progress: React.FC<FunctionalScreenProps> = ({ setIsLoading, refetchData, 
           return (
             <AccordionBox key={`completed-${count}`} title={`Stage ${riddle.order}: ${riddle.answer}`}>
               {riddle.question.map((line, countLine) => {
-                return <Text key={`riddle-line${countLine}`}>{line}</Text>;
+                return (
+                  <Text key={`riddle-line${countLine}`} style={(countLine + 1) % 3 === 0 && { marginBottom: 10 }}>
+                    {line}
+                  </Text>
+                );
               })}
 
               <View style={Styled.section}>

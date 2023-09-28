@@ -1,93 +1,38 @@
 {
+  "name": "client2",
+  "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start --minify",
+    "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "tslint": "tslint --project .",
-    "tsc": "tsc --project . --noEmit --watch",
-    "tsc-test": "npm run tslint && npm run tsc",
-    "test": "jest --watchAll --coverage --silent"
+    "web": "expo start --web"
   },
   "dependencies": {
-    "@expo-google-fonts/fredoka-one": "^0.1.0",
-    "@expo/match-media": "^0.1.0",
-    "@expo/vector-icons": "^12.0.0",
-    "@react-navigation/material-bottom-tabs": "^5.2.12",
-    "@react-navigation/native": "^5.6.1",
-    "axios": "^0.21.0",
+    "@expo-google-fonts/fredoka-one": "^0.2.3",
+    "@expo/match-media": "^0.4.0",
+    "@expo/vector-icons": "^13.0.0",
+    "@react-navigation/material-bottom-tabs": "^6.2.17",
+    "@react-navigation/native": "^6.1.8",
+    "@types/react": "~18.2.14",
+    "axios": "^1.5.0",
     "classnames-react-native": "^1.1.0",
-    "date-fns": "^2.16.1",
-    "expo": "^40.0.0",
-    "expo-app-loading": "^1.0.1",
-    "expo-constants": "~9.3.3",
-    "expo-secure-store": "~9.3.0",
-    "expo-splash-screen": "~0.8.1",
-    "expo-status-bar": "~1.0.3",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.0.tar.gz",
+    "date-fns": "^2.30.0",
+    "expo": "~49.0.12",
+    "expo-secure-store": "~12.3.1",
+    "expo-status-bar": "~1.6.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.72.5",
     "react-native-extended-stylesheet": "^0.12.0",
-    "react-native-loading-spinner-overlay": "^2.0.0",
-    "react-native-paper": "^3.10.1",
-    "react-native-screens": "~2.15.2",
-    "react-native-svg": "^12.1.0",
-    "react-native-svg-transformer": "^0.14.3",
-    "react-native-vector-icons": "6.6.0",
-    "react-native-web": "~0.13.12",
-    "react-responsive": "^8.2.0"
+    "react-native-loading-spinner-overlay": "^3.0.1",
+    "react-native-svg": "13.9.0",
+    "react-native-svg-transformer": "^1.1.0",
+    "react-native-web": "~0.19.6",
+    "typescript": "^5.1.3"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0",
-    "@expo/metro-config": "^0.1.56",
-    "@types/expo": "^33.0.1",
-    "@types/jest": "^26.0.7",
-    "@types/react": "~16.9.35",
-    "@types/react-native": "~0.63.2",
-    "@types/react-native-vector-icons": "^6.4.5",
-    "@types/react-test-renderer": "^16.9.2",
-    "jest": "^26.6.3",
-    "jest-expo": "^40.0.0",
-    "react-test-renderer": "16.13.1",
-    "ts-jest": "^26.1.1",
-    "tslint": "^6.1.2",
-    "tslint-config-airbnb": "^5.11.2",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "~4.0.0"
+    "@babel/core": "^7.20.0"
   },
-  "private": true,
-  "jest": {
-    "preset": "jest-expo",
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testMatch": [
-      "**/?(*.)+(spec|test).ts?(x)"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "ts",
-      "tsx"
-    ],
-    "collectCoverageFrom": [
-      "!<rootDir>/**/styles.tsx",
-      "!<rootDir>/**/mocks/**",
-      "!<rootDir>/types.d.ts",
-      "!<rootDir>/build/**",
-      "!<rootDir>/src/assets/**"
-    ],
-    "coverageReporters": [
-      "text"
-    ],
-    "timers": "fake",
-    "testEnvironment": "jsdom",
-    "globals": {
-      "ts-jest": {
-        "tsconfig": {
-          "jsx": "react"
-        }
-      }
-    }
-  }
+  "private": true
 }

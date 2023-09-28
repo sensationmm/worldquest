@@ -4,7 +4,7 @@ import React from 'react';
 import Colors from '../../constants/Colors';
 import { getTheme } from '../../utils/theme';
 
-enum IconSize {
+export enum IconSize {
   SMALL = 'small',
   MEDIUM = 'medium',
   LARGE = 'large',

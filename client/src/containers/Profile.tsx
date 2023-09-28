@@ -10,7 +10,7 @@ import { FunctionalScreenProps } from '../App';
 import Logo from '../assets/logo.svg';
 import Box from '../components/box';
 import Button from '../components/button';
-import Icon from '../components/icon';
+import Icon, { IconSize } from '../components/icon';
 import PageHeader from '../components/page-header';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
@@ -19,6 +19,7 @@ import { formatDate } from '../utils/date';
 
 import { getTheme } from '../utils/theme';
 import Styled from './Profile.styles';
+import SvgComponent from '../components/svg';
 
 const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, refetchData, setRefetchData }) => {
   const AccountService = new accountService();
@@ -59,8 +60,6 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
       });
     }
   };
-
-  console.log('Profile');
 
   return (
     <View>
@@ -126,10 +125,10 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
                         key={`swatch-${countChunk}-${count}`}
                         style={{ ...Styled.themeSwatch, backgroundColor: theme.primary }}
                       >
-                        <Logo style={{ color: theme.secondary }} />
+                        <SvgComponent svg={Logo} style={{ color: theme.secondary }} />
                         {getTheme() === theme && (
                           <View style={Styled.themeCheckMark}>
-                            <Icon name={'check'} size={'medium'} color={Colors.basic.black} />
+                            <Icon name={'check'} size={IconSize.MEDIUM} color={Colors.basic.black} />
                           </View>
                         )}
                       </View>

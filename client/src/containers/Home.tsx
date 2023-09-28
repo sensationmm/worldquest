@@ -7,7 +7,7 @@ import AccordionBox from '../components/accordion-box';
 import Box from '../components/box';
 import Button from '../components/button';
 import FormInput from '../components/form-input';
-import Icon from '../components/icon';
+import Icon, { IconSize } from '../components/icon';
 import PageHeader from '../components/page-header';
 import { dateNoTime, formatDate } from '../utils/date';
 
@@ -37,7 +37,7 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
   const [hasGuessed, setHasGuessed] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
-  let statusTimeout: number;
+  let statusTimeout: ReturnType<typeof setTimeout>;
 
   useEffect(() => {
     if (!current) {
@@ -54,12 +54,12 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
       setIsCorrect(true);
       setHasGuessed(true);
       setShowStatus(true);
-      setGuess(current.guesses[0].toString());
+      setGuess(current.guesses[0].value);
     } else if (current?.lastPlayedAt && new Date(current?.lastPlayedAt) > dateNoTime(new Date())) {
       setIsCorrect(false);
       setHasGuessed(true);
       setShowStatus(true);
-      setGuess(current.guesses[0].toString());
+      setGuess(current.guesses[0].value);
     }
   }, [current?.completedAt, current?.lastPlayedAt]);
 
@@ -141,10 +141,8 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
     outputRange: ['0deg', '360deg'],
   });
 
-  console.log('Home');
-
   return (
-    <ScrollView>
+    <View>
       <PageHeader title={current ? `Stage ${current?.order} of ${Vars.totalRiddles}` : `Home`} />
 
       <View style={isTablet && Styled.tabletCols}>
@@ -163,7 +161,7 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
 
           {!hasGuessed ? (
             <>
-              <FormInput value={guess} onChange={setGuess} placeholder={'Enter your guess...'} />
+              <FormInput label='guess' value={guess} onChange={setGuess} placeholder={'Enter your guess...'} />
               <Button onClick={solveRiddle} label={'Check Answer'} disabled={!guess} />
             </>
           ) : (
@@ -174,12 +172,12 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
               <View style={Styled.guessStatus}>
                 {!showStatus ? (
                   <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                    <Icon name={'circle-notch'} size={'large'} />
+                    <Icon name={'circle-notch'} size={IconSize.LARGE} />
                   </Animated.View>
                 ) : (
                   <Icon
                     name={isCorrect ? 'check-circle' : 'times-circle'}
-                    size={'large'}
+                    size={IconSize.LARGE}
                     color={isCorrect ? Colors.indicator.right : Colors.indicator.wrong}
                   />
                 )}
@@ -203,17 +201,6 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
         </View>
 
         <View style={isTablet && Styled.tabletCol}>
-          {!(hasGuessed && !showStatus) && current?.guesses && current.guesses.length > 0 && (
-            <AccordionBox title={`${current.guesses.length} Guess${current.guesses.length > 1 && 'es'}`}>
-              {current.guesses.map((oldGuess, count) => (
-                <View key={`guess-${count}`} style={Styled.guess}>
-                  <Text style={Fonts.bold}>{oldGuess.value}</Text>
-                  <Text style={Fonts.bold}>{formatDate(oldGuess.guessedAt)}</Text>
-                </View>
-              ))}
-            </AccordionBox>
-          )}
-
           {!(hasGuessed && !showStatus) && (
             <Box
               title={'Clues'}
@@ -241,9 +228,20 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
               )}
             </Box>
           )}
+
+          {current?.guesses && current.guesses.length > 0 && (
+            <AccordionBox title={`${current.guesses.length} Guess${current.guesses.length > 1 && 'es'}`}>
+              {current.guesses.map((oldGuess, count) => (
+                <View key={`guess-${count}`} style={Styled.guess}>
+                  <Text style={Fonts.bold}>{oldGuess.value}</Text>
+                  <Text style={Fonts.bold}>{formatDate(oldGuess.guessedAt)}</Text>
+                </View>
+              ))}
+            </AccordionBox>
+          )}
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
