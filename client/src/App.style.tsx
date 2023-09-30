@@ -7,6 +7,11 @@ export const styles = StyleSheet.create({
     backgroundColor: getTheme().primary,
     shadowOpacity: 0,
   },
+  main: {
+    flex: 1,
+    height: '100%',
+    backgroundColor: getTheme().primary,
+  },
 });
 
 export const theme = {

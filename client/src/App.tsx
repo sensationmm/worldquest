@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 
 import Icon, { IconSize } from './components/icon';
 import Loader from './components/loader';
@@ -78,7 +78,7 @@ const App = () => {
   const tabs = isLoggedIn ? tabsMain : tabsAuth;
 
   return (
-    <>
+    <SafeAreaView style={styles.main}>
       {!resourcesLoaded ? (
         <Main>{/* <AppLoading testId={'app-loading'} /> */}</Main>
       ) : (
@@ -98,12 +98,14 @@ const App = () => {
                 return (
                   <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
                     {() => (
-                      <tab.component
-                        setIsLoading={setIsLoading}
-                        setIsLoggedIn={setIsLoggedIn}
-                        refetchData={isLoggedIn ? refetchData : undefined}
-                        setRefetchData={isLoggedIn ? setRefetchData : undefined}
-                      />
+                      <ScrollView style={{ flexGrow: 1 }}>
+                        <tab.component
+                          setIsLoading={setIsLoading}
+                          setIsLoggedIn={setIsLoggedIn}
+                          refetchData={isLoggedIn ? refetchData : undefined}
+                          setRefetchData={isLoggedIn ? setRefetchData : undefined}
+                        />
+                      </ScrollView>
                     )}
                   </Tab.Screen>
                 );
@@ -113,7 +115,7 @@ const App = () => {
           <Loader isLoading={isLoading} />
         </Main>
       )}
-    </>
+    </SafeAreaView>
   );
 };
 

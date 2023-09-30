@@ -56,7 +56,6 @@ class BaseService {
         if (config.data) {
           console.log(config.data);
         }
-        console.log(response.status);
         console.log({ ...response.data });
 
         return {
@@ -69,7 +68,6 @@ class BaseService {
         if (config.data) {
           console.log(config.data);
         }
-        console.log('error', error);
         console.log('error.status', error.status);
         console.log('error.data', error.data);
 

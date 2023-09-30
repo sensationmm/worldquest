@@ -10,16 +10,24 @@ import Styled from './styles';
 import { getTheme } from '../../utils/theme';
 import { AccordionBoxProps } from './accordion-box.types';
 
-const AccordionBox: React.FC<AccordionBoxProps> = ({ children, ...rest }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const AccordionBox: React.FC<AccordionBoxProps> = ({ children, defaultOpen = false, ...rest }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
 
   return (
     <Box
       {...rest}
       showContent={isOpen}
       action={
-        <TouchableHighlight style={Styled.expander} underlayColor={Colors.basic.white} onPress={() => setIsOpen(!isOpen)}>
-          <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={() => setIsOpen(!isOpen)} color={getTheme().primary} />
+        <TouchableHighlight
+          style={Styled.expander}
+          underlayColor={Colors.basic.white}
+          onPress={() => setIsOpen(!isOpen)}
+        >
+          <Icon
+            name={isOpen ? 'chevron-up' : 'chevron-down'}
+            onClick={() => setIsOpen(!isOpen)}
+            color={getTheme().primary}
+          />
         </TouchableHighlight>
       }
     >
