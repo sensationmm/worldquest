@@ -19,5 +19,6 @@ export const theme = {
   colors: {
     ...DefaultTheme.colors,
     background: getTheme().primary,
+    secondaryContainer: 'transparent',
   },
 };

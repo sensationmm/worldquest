@@ -1,6 +1,15 @@
 import BaseService from './BaseService';
 
 class ProgressService extends BaseService {
+  start = () => {
+    const config = {
+      url: 'progress/start',
+      unauthed: false,
+    };
+
+    return this.doRequest(config);
+  };
+
   current = () => {
     const config = {
       url: 'progress/current',

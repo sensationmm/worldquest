@@ -15,6 +15,22 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
+  register = (name: string, email: string, password: string, password2: string) => {
+    const config = {
+      url: 'accounts/register',
+      method: 'post',
+      unauthed: true,
+      data: {
+        name,
+        email,
+        password,
+        password2,
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
   current = () => {
     const config = {
       url: 'accounts/current',
