@@ -68,12 +68,12 @@ class BaseService {
         if (config.data) {
           console.log(config.data);
         }
-        console.log('error.status', error.status);
-        console.log('error.data', error.data);
+        console.log('error.status', error.response.status);
+        console.log('error.data', error.response.data.msg);
 
         return {
-          status: error?.status,
-          msg: error?.data?.msg,
+          status: error?.response.status,
+          msg: error?.response.data?.msg,
         };
       });
   };

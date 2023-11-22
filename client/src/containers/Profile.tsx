@@ -84,10 +84,12 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
                 <Text style={Fonts.bold}>Member since: </Text>
                 <Text>{formatDate(currentUser?.createdAt)}</Text>
               </View>
-              <View style={Styled.section}>
-                <Text style={Fonts.bold}>Last played: </Text>
-                <Text>{formatDate(currentUser?.lastPlayedAt)}</Text>
-              </View>
+              {currentUser?.lastPlayedAt && (
+                <View style={Styled.section}>
+                  <Text style={Fonts.bold}>Last played: </Text>
+                  <Text>{formatDate(currentUser?.lastPlayedAt)}</Text>
+                </View>
+              )}
             </View>
           </>
         )}

@@ -93,7 +93,7 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
             })
             .catch((err) => res.status(400).json({ msg: 'Riddle not found' }));
         })
-        .catch((err) => res.status(400).json({ msg: 'user not found' }));
+        .catch((err) => res.status(400).json({ msg: 'User not found' }));
     })
     .catch((err) => res.status(400).json({ msg: 'Progress not found' }));
 });

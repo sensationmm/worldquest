@@ -1,6 +1,6 @@
 import { FredokaOne_400Regular, useFonts } from '@expo-google-fonts/fredoka-one';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -33,7 +33,7 @@ EStyleSheet.build();
 
 const App = () => {
   const AccountService = new accountService();
-
+  const navigationRef = useNavigationContainerRef();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [refetchData, setRefetchData] = useState(false);
@@ -75,6 +75,15 @@ const App = () => {
     reauth();
   }, []);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigationRef.resetRoot({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
+    }
+  }, [isLoggedIn]);
+
   const tabs = isLoggedIn ? tabsMain : tabsAuth;
 
   return (
@@ -83,7 +92,7 @@ const App = () => {
         <Main>{/* <AppLoading testId={'app-loading'} /> */}</Main>
       ) : (
         <Main>
-          <NavigationContainer theme={theme} testId={'navigation-container'}>
+          <NavigationContainer ref={navigationRef} theme={theme} testId={'navigation-container'}>
             <Tab.Navigator
               initialRouteName={isLoggedIn ? 'Home' : 'Log In'}
               barStyle={styles.tabs}

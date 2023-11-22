@@ -1,4 +1,5 @@
 import '@expo/match-media';
+import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
 import { Animated, Easing, ScrollView, Text, View } from 'react-native';
 // import { useMediaQuery } from 'react-responsive';
@@ -27,7 +28,7 @@ enum Clue {
   CLUE3 = 'clue3',
 }
 
-const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData }) => {
+const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, setRefetchData }) => {
   const isTablet = false; /*useMediaQuery({
     query: '(min-device-width:400) and (max-device-width:1024)',
   });*/
@@ -65,9 +66,15 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
 
   const getCurrentRiddle = async () => {
     setIsLoading(true);
-    await ProgressService.current().then((res) => {
-      setCurrent(res.data);
-      setIsLoading(false);
+    await ProgressService.current().then(async (response) => {
+      if (response.status === 200) {
+        setCurrent(response.data);
+        setIsLoading(false);
+      } else {
+        setIsLoggedIn(false);
+        await SecureStore.deleteItemAsync('jwt_token');
+        setIsLoading(false);
+      }
     });
   };
 
@@ -143,104 +150,114 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setRefetchData })
 
   return (
     <View>
-      <PageHeader title={current ? `Stage ${current?.order} of ${Vars.totalRiddles}` : `Home`} />
+      {current && (
+        <>
+          <PageHeader title={current ? `Stage ${current?.order} of ${Vars.totalRiddles}` : `Home`} />
 
-      <View style={isTablet && Styled.tabletCols}>
-        <View style={isTablet && Styled.tabletCol}>
-          <Box centered>
-            {current?.question.map((line, count) => {
-              const needsLineBreak = (count + 1) % 3 === 0 && count + 1 < current.question.length;
+          <View style={isTablet && Styled.tabletCols}>
+            <View style={isTablet && Styled.tabletCol}>
+              <Box centered>
+                {current?.question.map((line, count) => {
+                  const needsLineBreak = (count + 1) % 3 === 0 && count + 1 < current.question.length;
 
-              return (
-                <Text key={`riddle-line${count}`} style={{ ...Fonts.riddle, marginBottom: !needsLineBreak ? 0 : 20 }}>
-                  {line}
-                </Text>
-              );
-            })}
-          </Box>
+                  return (
+                    <Text
+                      key={`riddle-line${count}`}
+                      style={{ ...Fonts.riddle, marginBottom: !needsLineBreak ? 0 : 20 }}
+                    >
+                      {line}
+                    </Text>
+                  );
+                })}
+              </Box>
 
-          {!hasGuessed ? (
-            <>
-              <FormInput label='guess' value={guess} onChange={setGuess} placeholder={'Enter your guess...'} />
-              <Button onClick={solveRiddle} label={'Check Answer'} disabled={!guess} />
-            </>
-          ) : (
-            <Box centered>
-              <Text style={Fonts.bold}>You guessed</Text>
-              <Text style={Fonts.guess}>{guess}</Text>
+              {!hasGuessed ? (
+                <>
+                  <FormInput label='guess' value={guess} onChange={setGuess} placeholder={'Enter your guess...'} />
+                  <Button onClick={solveRiddle} label={'Check Answer'} disabled={!guess} />
+                </>
+              ) : (
+                <Box centered>
+                  <Text style={Fonts.bold}>You guessed</Text>
+                  <Text style={Fonts.guess}>{guess}</Text>
 
-              <View style={Styled.guessStatus}>
-                {!showStatus ? (
-                  <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                    <Icon name={'circle-notch'} size={IconSize.LARGE} />
-                  </Animated.View>
-                ) : (
-                  <Icon
-                    name={isCorrect ? 'check-circle' : 'times-circle'}
-                    size={IconSize.LARGE}
-                    color={isCorrect ? Colors.indicator.right : Colors.indicator.wrong}
-                  />
-                )}
-              </View>
+                  <View style={Styled.guessStatus}>
+                    {!showStatus ? (
+                      <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                        <Icon name={'circle-notch'} size={IconSize.LARGE} />
+                      </Animated.View>
+                    ) : (
+                      <Icon
+                        name={isCorrect ? 'check-circle' : 'times-circle'}
+                        size={IconSize.LARGE}
+                        color={isCorrect ? Colors.indicator.right : Colors.indicator.wrong}
+                      />
+                    )}
+                  </View>
 
-              {showStatus &&
-                current &&
-                (isCorrect ? (
-                  <>
-                    <Text style={Fonts.guess}>Congratulations</Text>
-                    <Text style={Fonts.bold}>Check back tomorrow for Stage {current?.order + 1}!</Text>
-                  </>
-                ) : (
-                  <>
-                    <Text style={Fonts.guess}>Sorry</Text>
-                    <Text style={Fonts.bold}>Try again tomorrow!</Text>
-                  </>
-                ))}
-            </Box>
-          )}
-        </View>
-
-        <View style={isTablet && Styled.tabletCol}>
-          {!(hasGuessed && !showStatus) && (
-            <Box
-              title={'Clues'}
-              action={
-                !isCorrect ? (
-                  clueAvailable ? (
-                    <Button
-                      small
-                      onClick={getNextClue}
-                      label={`Use clue ${cluesUsed + 1} of 3`}
-                      disabled={noClueTokens}
-                    />
-                  ) : (
-                    <Text style={Styled.newHintTitle}>All clues used</Text>
-                  )
-                ) : undefined
-              }
-            >
-              {clues}
-
-              {clueAvailable && noClueTokens && (
-                <View style={Styled.hintUnavailable}>
-                  <Button small onClick={getNextClue} label={`Buy more clue tokens`} />
-                </View>
+                  {showStatus &&
+                    current &&
+                    (isCorrect ? (
+                      <>
+                        <Text style={Fonts.guess}>Congratulations</Text>
+                        <Text style={Fonts.bold}>Check back tomorrow for Stage {current?.order + 1}!</Text>
+                      </>
+                    ) : (
+                      <>
+                        <Text style={Fonts.guess}>Sorry</Text>
+                        <Text style={Fonts.bold}>Try again tomorrow!</Text>
+                      </>
+                    ))}
+                </Box>
               )}
-            </Box>
-          )}
+            </View>
 
-          {current?.guesses && current.guesses.length > 0 && (
-            <AccordionBox title={`${current.guesses.length} Guess${current.guesses.length > 1 && 'es'}`}>
-              {current.guesses.map((oldGuess, count) => (
-                <View key={`guess-${count}`} style={Styled.guess}>
-                  <Text style={Fonts.bold}>{oldGuess.value}</Text>
-                  <Text style={Fonts.bold}>{formatDate(oldGuess.guessedAt)}</Text>
-                </View>
-              ))}
-            </AccordionBox>
-          )}
-        </View>
-      </View>
+            <View style={isTablet && Styled.tabletCol}>
+              {!hasGuessed && !showStatus && (
+                <Box
+                  title={'Clues'}
+                  action={
+                    !isCorrect ? (
+                      clueAvailable ? (
+                        <Button
+                          small
+                          onClick={getNextClue}
+                          label={`Use clue ${cluesUsed + 1} of 3`}
+                          disabled={noClueTokens}
+                        />
+                      ) : (
+                        <Text style={Styled.newHintTitle}>All clues used</Text>
+                      )
+                    ) : undefined
+                  }
+                >
+                  {clues}
+
+                  {clueAvailable && noClueTokens && (
+                    <View style={Styled.hintUnavailable}>
+                      <Button small onClick={getNextClue} label={`Buy more clue tokens`} />
+                    </View>
+                  )}
+                </Box>
+              )}
+
+              {current?.guesses && current.guesses.length > 0 && (
+                <AccordionBox
+                  title={`${current.guesses.length} Guess${current.guesses.length > 1 ? 'es' : ''}`}
+                  defaultOpen={hasGuessed}
+                >
+                  {current.guesses.map((oldGuess, count) => (
+                    <View key={`guess-${count}`} style={Styled.guess}>
+                      <Text style={Fonts.bold}>{oldGuess.value}</Text>
+                      <Text style={Fonts.bold}>{formatDate(oldGuess.guessedAt)}</Text>
+                    </View>
+                  ))}
+                </AccordionBox>
+              )}
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 };

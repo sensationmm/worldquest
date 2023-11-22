@@ -135,10 +135,7 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
 // @route   POST api/users/played
 // @desc    Update last played time
 // @access  Private
-router.post(
-  '/played',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+router.post('/played', passport.authenticate('jwt', { session: false }), (req, res) => {
     User.findOneAndUpdate({ email: req.user.email }, { $set: { last_played_at: Date.now() } }, { new: true })
       .then(() => res.json({ success: true, msg: 'Last played updated' }))
       .catch(() => res.status(400).json({ msg: 'User not found' }));
@@ -151,10 +148,7 @@ router.post(
 // @route   POST api/users/buyClues
 // @desc    Purchase clues
 // @access  Private
-router.post(
-  '/buyClues',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+router.post('/buyClues', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { numClues } = req.body;
 
     if (!numClues) {

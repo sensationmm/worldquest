@@ -1,5 +1,5 @@
 import classNames from 'classnames-react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableHighlight, View } from 'react-native';
 
 import Colors from '../../constants/Colors';
@@ -12,6 +12,10 @@ import { AccordionBoxProps } from './accordion-box.types';
 
 const AccordionBox: React.FC<AccordionBoxProps> = ({ children, defaultOpen = false, ...rest }) => {
   const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+
+  useEffect(() => {
+    setIsOpen(defaultOpen);
+  }, [defaultOpen]);
 
   return (
     <Box

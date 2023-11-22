@@ -41,6 +41,8 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
     setState(val);
   };
 
+  const submitDisabled = email === '' || password === '' || error !== undefined;
+
   return (
     <View>
       <PageHeader title={'Log In'} />
@@ -50,7 +52,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
 
       {error && <ErrorBox>{error}</ErrorBox>}
 
-      <Button onClick={onLogin} label={'Log In'} />
+      <Button onClick={onLogin} label={'Log In'} disabled={submitDisabled} />
     </View>
   );
 };
