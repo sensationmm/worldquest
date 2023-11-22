@@ -226,7 +226,8 @@ router.post('/guess', passport.authenticate('jwt', { session: false }), (req, re
               Progress.findById(progressId)
                 .then((progress) => {
                   if (!progress.completed_at) {
-                    progress.completed_at = Date.now();
+                    const now = Date.now();
+                    progress.completed_at = now;
                     progress
                       .save()
                       .then(() => {
@@ -235,6 +236,7 @@ router.post('/guess', passport.authenticate('jwt', { session: false }), (req, re
                             const newProgress = new Progress({
                               user: req.user.id,
                               riddle: nextRiddle.id,
+                              started_at: now
                             });
 
                             newProgress

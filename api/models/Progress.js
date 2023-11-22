@@ -16,6 +16,9 @@ const ProgressSchema = new Schema({
     max: 3,
     default: 0,
   },
+  started_at: {
+    type: Date,
+  },
   completed_at: {
     type: Date,
   },
