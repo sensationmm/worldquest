@@ -5,8 +5,9 @@ const passport = require('passport');
 const path = require('path');
 
 const accounts = require('./routes/api/accounts');
-const riddles = require('./routes/api/riddles');
 const progress = require('./routes/api/progress');
+const riddles = require('./routes/api/riddles');
+const stats = require('./routes/api/stats');
 
 const app = express();
 
@@ -42,8 +43,9 @@ require('./config/passport')(passport);
 
 // Use Routes
 app.use('/api/accounts', accounts);
-app.use('/api/riddles', riddles);
 app.use('/api/progress', progress);
+app.use('/api/riddles', riddles);
+app.use('/api/stats', stats);
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
