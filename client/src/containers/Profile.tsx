@@ -20,6 +20,7 @@ import { formatDate } from '../utils/date';
 import { getTheme } from '../utils/theme';
 import Styled from './Profile.styles';
 import SvgComponent from '../components/svg';
+import Avatar from '../components/avatar';
 
 const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, refetchData, setRefetchData }) => {
   const AccountService = new accountService();
@@ -69,7 +70,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
         {currentUser && (
           <>
             <View style={Styled.avatarContainer}>
-              <Image style={Styled.avatar} source={{ uri: currentUser.avatar }} />
+              <Avatar src={currentUser.avatar} />
             </View>
             <View>
               <View style={Styled.section}>

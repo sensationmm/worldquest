@@ -1,7 +1,12 @@
 import { format } from 'date-fns';
 
-export const formatDate = (timestamp: Date) => {
-  return format(new Date(timestamp), 'do MMMM yyyy');
+export const formatDate = (timestamp: Date, inclTime: boolean = false) => {
+  const dateFormat = 'do MMMM yyyy';
+  if (inclTime) {
+    return format(new Date(timestamp), `${dateFormat} p`);
+  }
+
+  return format(new Date(timestamp), dateFormat);
 };
 
 export const dateNoTime = (timestamp: Date) => {

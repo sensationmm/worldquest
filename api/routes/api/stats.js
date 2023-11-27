@@ -38,7 +38,7 @@ router.get('/generate', async (req, res) => {
 
   const progressTally = {}
   let leaderID = undefined;
-  let numCompleted = 0, completedClues = 0, completedGuesses = 0;
+  let progressTallyMax = 1, numCompleted = 0, completedClues = 0, completedGuesses = 0;
 
   // Overall stats
   await Progresses.find({ completed_at: null }).then((currentStages) => {
@@ -52,6 +52,9 @@ router.get('/generate', async (req, res) => {
       if(progressTally.hasOwnProperty(currentStageLabel)) {
         const newCount = progressTally[currentStageLabel] + 1;
         progressTally[currentStageLabel] = newCount;
+        if(newCount > progressTallyMax) {
+          progressTallyMax = newCount;
+        }
       } else {
         progressTally[currentStageLabel] = 1;
       }
@@ -87,12 +90,14 @@ router.get('/generate', async (req, res) => {
   const statData = {
     totalUsers: numUsers,
     numUsersPerStage: progressTally,
+    numUsersPerStageMax: progressTallyMax,
     leader: leader,
     completedStages: {
       total: (prevStat?.completedStages.total || 0) + numCompleted,
       cluesUsed: (prevStat?.completedStages.cluesUsed || 0) + completedClues,
       guessesMade: (prevStat?.completedStages.guessesMade || 0) + completedGuesses,
-    }
+    },
+    date: Date.now()
   }
 
   const newStat = new Stat(statData);

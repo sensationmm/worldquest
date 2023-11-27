@@ -9,6 +9,9 @@ const StatSchema = new Schema({
     type: Map,
     of: Number
   },
+  numUsersPerStageMax: {
+    type: Number
+  },
   leader: {
     name: String,
     avatar: String,

@@ -56,14 +56,14 @@ const Progress: React.FC<FunctionalScreenProps> = ({ setIsLoading, refetchData, 
           <Text style={Fonts.bold}>Guesses</Text>
           <Text style={Fonts.guess}>{numGuesses}</Text>
           {completed && numGuesses > 0 && (
-            <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numGuesses / numCompleted).toFixed(1)}</Text>
+            <Text style={{ ...Fonts.guess, ...Fonts.body }}>{(numGuesses / numCompleted).toFixed(1)} / STG</Text>
           )}
         </Box>
         <Box centered>
           <Text style={Fonts.bold}>Clues Used</Text>
           <Text style={Fonts.guess}>{numCluesUsed}</Text>
           {completed && numCluesUsed > 0 && (
-            <Text style={{ ...Fonts.guess, ...Fonts.body }}>AVG: {(numCluesUsed / numCompleted).toFixed(1)}</Text>
+            <Text style={{ ...Fonts.guess, ...Fonts.body }}>{(numCluesUsed / numCompleted).toFixed(1)} / STG</Text>
           )}
         </Box>
       </View>

@@ -1,8 +1,8 @@
-import EStyleSheet from 'react-native-extended-stylesheet';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
+import { StyleSheet } from 'react-native';
 
-export default EStyleSheet.create({
+export default StyleSheet.create({
   hint: {
     paddingTop: 10,
     paddingBottom: 10,
@@ -10,10 +10,6 @@ export default EStyleSheet.create({
     borderStyle: 'solid',
     borderTopWidth: 1,
     textAlign: 'center',
-  },
-  'hint:last-child': {
-    paddingBottom: 0,
-    backgroundColor: 'blue',
   },
   newHintTitle: {
     ...Fonts.bodySmall,

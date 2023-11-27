@@ -7,25 +7,10 @@ import ProgressStyles from './Progress.styles';
 export default StyleSheet.create({
   ...ProgressStyles,
   avatarContainer: {
-    backgroundColor: Colors.basic.white,
-    width: 80,
-    height: 80,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    overflow: 'hidden',
     position: 'absolute',
     top: 15,
     right: 15,
     zIndex: 2,
-    borderWidth: 5,
-    borderColor: getTheme().primary,
-    borderStyle: 'solid',
-  },
-  avatar: {
-    width: '100%',
-    height: '100%',
   },
   clueSection: {
     display: 'flex',

@@ -3,7 +3,6 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView, ScrollView } from 'react-native';
 
 import Icon, { IconSize } from './components/icon';
@@ -28,8 +27,6 @@ export interface FunctionalScreenProps extends ScreenProps {
 }
 
 const Tab = createMaterialBottomTabNavigator();
-
-EStyleSheet.build();
 
 const App = () => {
   const AccountService = new accountService();
