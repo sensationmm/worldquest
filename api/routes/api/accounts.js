@@ -13,7 +13,7 @@ const validateLoginInput = require('../../validation/login');
 // Load User model
 const User = require('../../models/User');
 
-// @route   GET api/users/test
+// @route   GET api/accounts/test
 // @desc    Tests users route
 // @access  Public
 router.get('/test', (req, res) =>
@@ -22,7 +22,7 @@ router.get('/test', (req, res) =>
   }),
 );
 
-// @route   GET api/users/register
+// @route   GET api/accounts/register
 // @desc    Register a user
 // @access  Public
 router.post('/register', (req, res) => {
@@ -70,7 +70,7 @@ router.post('/register', (req, res) => {
   });
 });
 
-// @route   GET api/users/login
+// @route   GET api/accounts/login
 // @desc    Login User / returning JWT
 // @access  Public
 router.post('/login', (req, res) => {
@@ -117,7 +117,7 @@ router.post('/login', (req, res) => {
   });
 });
 
-// @route   GET api/users/current
+// @route   GET api/accounts/current
 // @desc    Return current user
 // @access  Private
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -129,10 +129,11 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
     createdAt: req.user.created_at,
     lastPlayedAt: req.user.last_played_at,
     clueTokens: req.user.clue_tokens,
+    theme: req.user.theme
   });
 });
 
-// @route   POST api/users/played
+// @route   POST api/accounts/played
 // @desc    Update last played time
 // @access  Private
 router.post('/played', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -145,7 +146,7 @@ router.post('/played', passport.authenticate('jwt', { session: false }), (req, r
   },
 );
 
-// @route   POST api/users/buyClues
+// @route   POST api/accounts/buyClues
 // @desc    Purchase clues
 // @access  Private
 router.post('/buyClues', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -157,6 +158,25 @@ router.post('/buyClues', passport.authenticate('jwt', { session: false }), (req,
 
     User.findOneAndUpdate({ email: req.user.email }, { $set: { clue_tokens: req.user.clue_tokens + parseInt(numClues) } }, { new: true })
       .then(() => res.json({ success: true, msg: 'User clues updated' }))
+      .catch(() => res.status(400).json({ msg: 'User not found' }));
+  },
+  (error) => {
+    res.status(400).json({ msg: error });
+  },
+);
+
+// @route   POST api/accounts/theme
+// @desc    Set user defined theme
+// @access  Private
+router.post('/theme', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const { theme } = req.body;
+
+    if (!theme) {
+      res.status(400).json({ msg: 'theme must be provided' });
+    }
+
+    User.findOneAndUpdate({ email: req.user.email }, { $set: { theme: theme } }, { new: true })
+      .then((data) => res.json({ success: true, msg: 'Theme updated', theme: data.theme }))
       .catch(() => res.status(400).json({ msg: 'User not found' }));
   },
   (error) => {

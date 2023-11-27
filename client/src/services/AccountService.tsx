@@ -1,3 +1,4 @@
+import { Theme } from '../types/User.types';
 import BaseService from './BaseService';
 
 class AccountService extends BaseService {
@@ -47,6 +48,19 @@ class AccountService extends BaseService {
       unauthed: false,
       data: {
         numClues: num,
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
+  saveTheme = (theme: Theme) => {
+    const config = {
+      url: 'accounts/theme',
+      method: 'post',
+      unauthed: false,
+      data: {
+        theme: theme,
       },
     };
 

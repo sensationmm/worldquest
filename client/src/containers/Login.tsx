@@ -1,6 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
+
+import { Link } from '@react-navigation/native';
 
 import { ErrorBox } from '../components/box';
 import Button from '../components/button';
@@ -10,8 +12,9 @@ import PageHeader from '../components/page-header';
 import accountService from '../services/AccountService';
 
 import { ScreenProps } from '../App';
+import Fonts from '../constants/Fonts';
 
-const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
+const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, navigation }) => {
   const [email, setEmail] = useState('testuser@sensationmultimedia.co.uk');
   const [password, setPassword] = useState('Asprilla319!');
   const [error, setError] = useState(undefined);
@@ -53,6 +56,13 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
       {error && <ErrorBox>{error}</ErrorBox>}
 
       <Button onClick={onLogin} label={'Log In'} disabled={submitDisabled} />
+
+      <Text style={{ ...Fonts.body, ...Fonts.bold, color: 'white', textAlign: 'center' }}>
+        Don't have an account?&nbsp;
+        <Link to={{ screen: 'Register' }} style={{ textDecorationLine: 'underline' }}>
+          Register here
+        </Link>
+      </Text>
     </View>
   );
 };

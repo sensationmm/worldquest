@@ -33,6 +33,9 @@ const UserSchema = new Schema({
   },
   clue_tokens: {
     type: Number,
+  },
+  theme: {
+    type: 'brand' | 'brand2' | 'brand3' | 'brand4' | 'brand5' | 'brand6'
   }
 });
 

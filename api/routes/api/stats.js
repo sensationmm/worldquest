@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 
 const Guesses = require('../../models/Guess');
 const Progresses = require('../../models/Progress');
@@ -19,13 +20,13 @@ router.get('/test', (req, res) =>
 // @route   GET api/stats/latest
 // @desc    Gets latest stats
 // @access  Private
-router.get('/latest', async (req, res) => {
+router.get('/latest', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Stats.findOne(null, null, { sort: { date: -1 }}).then(data => res.json(data))
 })
 
 // @route   GET api/stats/generate
 // @desc    Compiles latest stats
-// @access  Private
+// @access  Public
 router.get('/generate', async (req, res) => {
   const prevStat = await Stats.findOne(null, null, { sort: { date: -1 }});
   const prevStatDate = prevStat?.date || '2021-01-01';

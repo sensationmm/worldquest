@@ -19,6 +19,7 @@ import accountService from './services/AccountService';
 export type ScreenProps = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+  navigation: any;
 };
 
 export interface FunctionalScreenProps extends ScreenProps {
@@ -103,13 +104,14 @@ const App = () => {
               {tabs.map((tab) => {
                 return (
                   <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
-                    {() => (
+                    {({ navigation }) => (
                       <ScrollView style={{ flexGrow: 1 }}>
                         <tab.component
                           setIsLoading={setIsLoading}
                           setIsLoggedIn={setIsLoggedIn}
                           refetchData={isLoggedIn ? refetchData : undefined}
                           setRefetchData={isLoggedIn ? setRefetchData : undefined}
+                          navigation={navigation}
                         />
                       </ScrollView>
                     )}

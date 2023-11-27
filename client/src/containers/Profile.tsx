@@ -1,10 +1,10 @@
 import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableHighlight, View } from 'react-native';
 import '../utils/chunk';
 
 import accountService from '../services/AccountService';
-import { User } from '../types/User.types';
+import { Theme, User } from '../types/User.types';
 
 import { FunctionalScreenProps } from '../App';
 import Logo from '../assets/logo.svg';
@@ -56,6 +56,19 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
         setCurrentUser({
           ...currentUser,
           clueTokens: currentUser.clueTokens + numClues,
+        });
+        setIsLoading(false);
+      });
+    }
+  };
+
+  const saveTheme = async (theme: Theme) => {
+    setIsLoading(true);
+    if (currentUser) {
+      await AccountService.saveTheme(theme).then((data) => {
+        setCurrentUser({
+          ...currentUser,
+          theme: data.theme,
         });
         setIsLoading(false);
       });
@@ -124,17 +137,20 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
                   {chunk.map((item: string, count: number) => {
                     const theme = Colors[item];
                     return (
-                      <View
+                      <TouchableHighlight
                         key={`swatch-${countChunk}-${count}`}
                         style={{ ...Styled.themeSwatch, backgroundColor: theme.primary }}
+                        onPress={() => saveTheme(item as Theme)}
                       >
-                        <SvgComponent svg={Logo} style={{ color: theme.secondary }} />
-                        {getTheme() === theme && (
-                          <View style={Styled.themeCheckMark}>
-                            <Icon name={'check'} size={IconSize.MEDIUM} color={Colors.basic.black} />
-                          </View>
-                        )}
-                      </View>
+                        <>
+                          <SvgComponent svg={Logo} style={{ color: theme.secondary }} />
+                          {getTheme() === theme && (
+                            <View style={Styled.themeCheckMark}>
+                              <Icon name={'check'} size={IconSize.MEDIUM} color={Colors.basic.black} />
+                            </View>
+                          )}
+                        </>
+                      </TouchableHighlight>
                     );
                   })}
                 </View>
