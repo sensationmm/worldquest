@@ -63,6 +63,7 @@ const App = () => {
       setIsLoading(true);
       AccountService.current().then(async (response) => {
         if (response.status === 200) {
+          setTheme(response.data.theme);
           setIsLoggedIn(true);
           setIsLoading(false);
         } else {
