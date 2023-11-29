@@ -87,7 +87,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
 
   return (
     <View>
-      <PageHeader title={'My Profile!'} />
+      <PageHeader title={'My Profile'} />
 
       <Box title={'Personal Details'}>
         {currentUser && (

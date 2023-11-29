@@ -249,12 +249,18 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, se
                   title={`${current.guesses.length} Guess${current.guesses.length > 1 ? 'es' : ''}`}
                   defaultOpen={hasGuessed}
                 >
-                  {current.guesses.map((oldGuess, count) => (
-                    <View key={`guess-${count}`} style={Styled.guess}>
-                      <Text style={Fonts(theme).bold}>{oldGuess.value}</Text>
-                      <Text style={Fonts(theme).bold}>{formatDate(oldGuess.guessedAt)}</Text>
-                    </View>
-                  ))}
+                  <View style={Styled.guesses}>
+                    {current.guesses.map((oldGuess, count) => (
+                      <View key={`guess-${count}`} style={Styled.guess}>
+                        <View style={Styled.guessColumn}>
+                          <Text style={Fonts(theme).bold}>{oldGuess.value}</Text>
+                        </View>
+                        <View style={Styled.guessColumn}>
+                          <Text style={Fonts(theme).bold}>{formatDate(oldGuess.guessedAt)}</Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
                 </AccordionBox>
               )}
             </View>

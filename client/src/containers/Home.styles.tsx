@@ -46,6 +46,15 @@ const styles = (theme) =>
     tabletCol: {
       width: '49%',
     },
+    guesses: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+    guessColumn: {
+      width: '45%',
+      display: 'flex',
+      justifyContent: 'center',
+    },
   });
 
 export default styles;
