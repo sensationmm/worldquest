@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { Link } from '@react-navigation/native';
@@ -11,13 +11,14 @@ import PageHeader from '../components/page-header';
 
 import accountService from '../services/AccountService';
 
-import { ScreenProps } from '../App';
+import { ScreenProps, ThemeContext } from '../App';
 import Fonts from '../constants/Fonts';
 
-const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, navigation }) => {
-  const [email, setEmail] = useState('testuser@sensationmultimedia.co.uk');
-  const [password, setPassword] = useState('Asprilla319!');
+const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme }) => {
+  const [email, setEmail] = useState('testuser@sensationmultimedia.co.uk'); // @TODO: remove hardcoded email
+  const [password, setPassword] = useState('Asprilla319!'); // @TODO: remove hardcoded password
   const [error, setError] = useState(undefined);
+  const theme = useContext(ThemeContext);
 
   const AccountService = new accountService();
 
@@ -27,6 +28,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, navigation 
     AccountService.login(email, password).then(async (response) => {
       if (response.status === 200) {
         await SecureStore.setItemAsync('jwt_token', response.data.token).then(() => {
+          setTheme(response.data.theme);
           setIsLoggedIn(true);
           setIsLoading(false);
         });
@@ -57,7 +59,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, navigation 
 
       <Button onClick={onLogin} label={'Log In'} disabled={submitDisabled} />
 
-      <Text style={{ ...Fonts.body, ...Fonts.bold, color: 'white', textAlign: 'center' }}>
+      <Text style={{ ...Fonts(theme).body, ...Fonts(theme).bold, color: 'white', textAlign: 'center' }}>
         Don't have an account?&nbsp;
         <Link to={{ screen: 'Register' }} style={{ textDecorationLine: 'underline' }}>
           Register here

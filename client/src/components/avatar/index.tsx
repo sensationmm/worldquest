@@ -1,14 +1,17 @@
 import React from 'react';
 
 import { Image, View } from 'react-native';
-import Styled from './styles';
+import styles from './styles';
 import Icon, { IconSize } from '../icon';
 import Colors from '../../constants/Colors';
+import { getStyles } from '../../utils/theme';
 
 type AvatarProps = {
   src: string;
 };
 const Avatar: React.FC<AvatarProps> = ({ src }) => {
+  const Styled = getStyles(styles);
+
   return (
     <View style={Styled.avatarContainer}>
       {src !== '' ? (

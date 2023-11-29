@@ -1,12 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
 import '../utils/chunk';
 
 import accountService from '../services/AccountService';
 import { Theme, User } from '../types/User.types';
 
-import { FunctionalScreenProps } from '../App';
+import { FunctionalScreenProps, ThemeContext } from '../App';
 import Logo from '../assets/logo.svg';
 import Box from '../components/box';
 import Button from '../components/button';
@@ -17,14 +17,23 @@ import Fonts from '../constants/Fonts';
 import Tokens from '../constants/Tokens';
 import { formatDate } from '../utils/date';
 
-import { getTheme } from '../utils/theme';
-import Styled from './Profile.styles';
+import { getStyles, getTheme } from '../utils/theme';
+import styles from './Profile.styles';
 import SvgComponent from '../components/svg';
 import Avatar from '../components/avatar';
 
-const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, refetchData, setRefetchData }) => {
+const Profile: React.FC<FunctionalScreenProps> = ({
+  setIsLoading,
+  setIsLoggedIn,
+  refetchData,
+  setRefetchData,
+  setTheme,
+}) => {
   const AccountService = new accountService();
   const [currentUser, setCurrentUser] = useState<User>();
+  const Styled = getStyles(styles);
+
+  const themeContext = useContext(ThemeContext);
 
   const getCurrentUser = async () => {
     setIsLoading(true);
@@ -65,11 +74,12 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
   const saveTheme = async (theme: Theme) => {
     setIsLoading(true);
     if (currentUser) {
-      await AccountService.saveTheme(theme).then((data) => {
+      AccountService.saveTheme(theme).then((response) => {
         setCurrentUser({
           ...currentUser,
-          theme: data.theme,
+          theme: response.data.theme,
         });
+        setTheme(response.data.theme);
         setIsLoading(false);
       });
     }
@@ -87,20 +97,20 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
             </View>
             <View>
               <View style={Styled.section}>
-                <Text style={Fonts.bold}>Name: </Text>
+                <Text style={Fonts(themeContext).bold}>Name: </Text>
                 <Text>{currentUser?.name}</Text>
               </View>
               <View style={Styled.section}>
-                <Text style={Fonts.bold}>Email: </Text>
+                <Text style={Fonts(themeContext).bold}>Email: </Text>
                 <Text>{currentUser?.email}</Text>
               </View>
               <View style={Styled.section}>
-                <Text style={Fonts.bold}>Member since: </Text>
+                <Text style={Fonts(themeContext).bold}>Member since: </Text>
                 <Text>{formatDate(currentUser?.createdAt)}</Text>
               </View>
               {currentUser?.lastPlayedAt && (
                 <View style={Styled.section}>
-                  <Text style={Fonts.bold}>Last played: </Text>
+                  <Text style={Fonts(themeContext).bold}>Last played: </Text>
                   <Text>{formatDate(currentUser?.lastPlayedAt)}</Text>
                 </View>
               )}
@@ -112,8 +122,8 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
       <Box title={'Clue Tokens'}>
         <View style={Styled.summary}>
           <View style={Styled.clueTokens}>
-            <Text style={Fonts.stat}>{currentUser?.clueTokens}</Text>
-            <Text style={Fonts.subHeading}>Left</Text>
+            <Text style={Fonts(themeContext).stat}>{currentUser?.clueTokens}</Text>
+            <Text style={Fonts(themeContext).subHeading}>Left</Text>
           </View>
 
           <View style={Styled.buyButtons}>
@@ -144,7 +154,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn,
                       >
                         <>
                           <SvgComponent svg={Logo} style={{ color: theme.secondary }} />
-                          {getTheme() === theme && (
+                          {themeContext === item && (
                             <View style={Styled.themeCheckMark}>
                               <Icon name={'check'} size={IconSize.MEDIUM} color={Colors.basic.black} />
                             </View>

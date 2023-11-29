@@ -103,11 +103,12 @@ router.post('/login', (req, res) => {
             name: user.name,
             email: user.email,
             avatar: user.avatar,
+            theme: user.theme
           };
 
           // Sign token
           jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
-            res.json({ success: true, token: token });
+            res.json({ success: true, token: token, theme: user.theme });
           });
         } else {
           return res.status(400).json({ msg: 'Password incorrect' });

@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DimensionValue, Text, View } from 'react-native';
 
-import { FunctionalScreenProps } from '../App';
+import { FunctionalScreenProps, ThemeContext } from '../App';
 import PageHeader from '../components/page-header';
 import statsService from '../services/StatsService';
 import { Stat } from '../types/Stats.types';
 
-import Styled from './Stats.styles';
+import styles from './Stats.styles';
 import Box from '../components/box';
 import Fonts from '../constants/Fonts';
 
 import { formatDate } from '../utils/date';
 import Avatar from '../components/avatar';
 import Vars from '../constants/Vars';
+import { getStyles } from '../utils/theme';
 
 const Stats: React.FC<FunctionalScreenProps> = ({ setIsLoading }) => {
   const StatsService = new statsService();
   const [stats, setStats] = useState<Stat>();
+  const Styled = getStyles(styles);
+  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     getLatestStats();
@@ -73,8 +76,8 @@ const Stats: React.FC<FunctionalScreenProps> = ({ setIsLoading }) => {
         <View style={Styled.leaderContainer}>
           <Avatar src={stats?.leader.avatar} />
           <View style={Styled.leaderText}>
-            <Text style={Fonts.bold}>Current Leader</Text>
-            <Text style={{ ...Fonts.guess, textAlign: 'left', width: '85%' }} numberOfLines={2}>
+            <Text style={Fonts(theme).bold}>Current Leader</Text>
+            <Text style={{ ...Fonts(theme).guess, textAlign: 'left', width: '85%' }} numberOfLines={2}>
               {stats?.leader.name || '-'}
             </Text>
           </View>
@@ -96,22 +99,22 @@ const Stats: React.FC<FunctionalScreenProps> = ({ setIsLoading }) => {
 
       <View style={Styled.summary}>
         <Box centered>
-          <Text style={Fonts.bold}>Total Users</Text>
-          <Text style={Fonts.guess}>{stats?.totalUsers || '-'}</Text>
+          <Text style={Fonts(theme).bold}>Total Users</Text>
+          <Text style={Fonts(theme).guess}>{stats?.totalUsers || '-'}</Text>
         </Box>
         <Box centered>
-          <Text style={Fonts.bold}>Avg Guesses</Text>
-          <Text style={Fonts.guess}>
+          <Text style={Fonts(theme).bold}>Avg Guesses</Text>
+          <Text style={Fonts(theme).guess}>
             {stats ? (stats?.completedStages.guessesMade / stats?.completedStages.total).toFixed(2) : '-'}
           </Text>
-          <Text style={{ ...Fonts.body, ...Fonts.bold }}>per stage</Text>
+          <Text style={{ ...Fonts(theme).body, ...Fonts(theme).bold }}>per stage</Text>
         </Box>
         <Box centered>
-          <Text style={Fonts.bold}>Avg Clues</Text>
-          <Text style={Fonts.guess}>
+          <Text style={Fonts(theme).bold}>Avg Clues</Text>
+          <Text style={Fonts(theme).guess}>
             {stats ? (stats?.completedStages.cluesUsed / stats?.completedStages.total).toFixed(2) : '-'}
           </Text>
-          <Text style={{ ...Fonts.body, ...Fonts.bold }}>per stage</Text>
+          <Text style={{ ...Fonts(theme).body, ...Fonts(theme).bold }}>per stage</Text>
         </Box>
       </View>
 

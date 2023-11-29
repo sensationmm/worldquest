@@ -2,7 +2,7 @@ import { FredokaOne_400Regular, useFonts } from '@expo-google-fonts/fredoka-one'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 
 import Icon, { IconSize } from './components/icon';
@@ -10,16 +10,20 @@ import Loader from './components/loader';
 import Main from './layout/main';
 
 import { tabsAuth, tabsMain } from './App.menu';
-import { styles, theme } from './App.style';
+import { navigationTheme, styles } from './App.style';
 
 import getByValue from './utils/getByValue';
 
 import accountService from './services/AccountService';
+import { Theme } from './types/User.types';
 
 export type ScreenProps = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
   navigation: any;
+  refetchData?: boolean;
+  setRefetchData?: Dispatch<SetStateAction<boolean>>;
+  setTheme?: Dispatch<SetStateAction<Theme>>;
 };
 
 export interface FunctionalScreenProps extends ScreenProps {
@@ -29,12 +33,15 @@ export interface FunctionalScreenProps extends ScreenProps {
 
 const Tab = createMaterialBottomTabNavigator();
 
+export const ThemeContext = createContext('brand');
+
 const App = () => {
   const AccountService = new accountService();
   const navigationRef = useNavigationContainerRef();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [refetchData, setRefetchData] = useState(false);
+  const [theme, setTheme] = useState<Theme>('brand');
 
   const [fontsLoaded] = useFonts({
     FredokaOne_400Regular,
@@ -85,43 +92,48 @@ const App = () => {
   const tabs = isLoggedIn ? tabsMain : tabsAuth;
 
   return (
-    <SafeAreaView style={styles.main}>
+    <SafeAreaView style={styles(theme).main}>
       {!resourcesLoaded ? (
-        <Main>{/* <AppLoading testId={'app-loading'} /> */}</Main>
+        <ThemeContext.Provider value={theme}>
+          <Main>{/* <AppLoading testId={'app-loading'} /> */}</Main>
+        </ThemeContext.Provider>
       ) : (
-        <Main>
-          <NavigationContainer ref={navigationRef} theme={theme} testId={'navigation-container'}>
-            <Tab.Navigator
-              initialRouteName={isLoggedIn ? 'Home' : 'Log In'}
-              barStyle={styles.tabs}
-              labeled={false}
-              screenOptions={({ route }: { route: any }) => ({
-                tabBarIcon: ({ focused }: { focused: boolean }) => {
-                  return icon(tabs, route, focused);
-                },
-              })}
-            >
-              {tabs.map((tab) => {
-                return (
-                  <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
-                    {({ navigation }) => (
-                      <ScrollView style={{ flexGrow: 1 }}>
-                        <tab.component
-                          setIsLoading={setIsLoading}
-                          setIsLoggedIn={setIsLoggedIn}
-                          refetchData={isLoggedIn ? refetchData : undefined}
-                          setRefetchData={isLoggedIn ? setRefetchData : undefined}
-                          navigation={navigation}
-                        />
-                      </ScrollView>
-                    )}
-                  </Tab.Screen>
-                );
-              })}
-            </Tab.Navigator>
-          </NavigationContainer>
-          <Loader isLoading={isLoading} />
-        </Main>
+        <ThemeContext.Provider value={theme}>
+          <Main>
+            <NavigationContainer ref={navigationRef} theme={navigationTheme} /*testId={'navigation-container'}*/>
+              <Tab.Navigator
+                initialRouteName={isLoggedIn ? 'Home' : 'Log In'}
+                barStyle={styles(theme).tabs}
+                labeled={false}
+                screenOptions={({ route }: { route: any }) => ({
+                  tabBarIcon: ({ focused }: { focused: boolean }) => {
+                    return icon(tabs, route, focused);
+                  },
+                })}
+              >
+                {tabs.map((tab) => {
+                  return (
+                    <Tab.Screen key={`tab-${tab.name}`} name={tab.name}>
+                      {({ navigation }) => (
+                        <ScrollView style={{ flexGrow: 1 }}>
+                          <tab.component
+                            setIsLoading={setIsLoading}
+                            setIsLoggedIn={setIsLoggedIn}
+                            refetchData={isLoggedIn ? refetchData : undefined}
+                            setRefetchData={isLoggedIn ? setRefetchData : undefined}
+                            setTheme={setTheme}
+                            navigation={navigation}
+                          />
+                        </ScrollView>
+                      )}
+                    </Tab.Screen>
+                  );
+                })}
+              </Tab.Navigator>
+            </NavigationContainer>
+            <Loader isLoading={isLoading} />
+          </Main>
+        </ThemeContext.Provider>
       )}
     </SafeAreaView>
   );

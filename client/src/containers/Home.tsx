@@ -1,7 +1,7 @@
 import '@expo/match-media';
 import * as SecureStore from 'expo-secure-store';
-import React, { useEffect, useState } from 'react';
-import { Animated, Easing, ScrollView, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Animated, Easing, Text, View } from 'react-native';
 // import { useMediaQuery } from 'react-responsive';
 
 import AccordionBox from '../components/accordion-box';
@@ -16,11 +16,12 @@ import { Guess, Riddle } from '../types/Riddle.types';
 
 import progressService from '../services/ProgressService';
 
-import { FunctionalScreenProps } from '../App';
+import { FunctionalScreenProps, ThemeContext } from '../App';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import Vars from '../constants/Vars';
-import Styled from './Home.styles';
+import styles from './Home.styles';
+import { getStyles } from '../utils/theme';
 
 enum Clue {
   CLUE1 = 'clue1',
@@ -29,6 +30,8 @@ enum Clue {
 }
 
 const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, setRefetchData }) => {
+  const Styled = getStyles(styles);
+  const theme = useContext(ThemeContext);
   const isTablet = false; /*useMediaQuery({
     query: '(min-device-width:400) and (max-device-width:1024)',
   });*/
@@ -163,7 +166,7 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, se
                   return (
                     <Text
                       key={`riddle-line${count}`}
-                      style={{ ...Fonts.riddle, marginBottom: !needsLineBreak ? 0 : 20 }}
+                      style={{ ...Fonts(theme).riddle, marginBottom: !needsLineBreak ? 0 : 20 }}
                     >
                       {line}
                     </Text>
@@ -178,8 +181,8 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, se
                 </>
               ) : (
                 <Box centered>
-                  <Text style={Fonts.bold}>You guessed</Text>
-                  <Text style={Fonts.guess}>{guess}</Text>
+                  <Text style={Fonts(theme).bold}>You guessed</Text>
+                  <Text style={Fonts(theme).guess}>{guess}</Text>
 
                   <View style={Styled.guessStatus}>
                     {!showStatus ? (
@@ -199,13 +202,13 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, se
                     current &&
                     (isCorrect ? (
                       <>
-                        <Text style={Fonts.guess}>Congratulations</Text>
-                        <Text style={Fonts.bold}>Check back tomorrow for Stage {current?.order + 1}!</Text>
+                        <Text style={Fonts(theme).guess}>Congratulations</Text>
+                        <Text style={Fonts(theme).bold}>Check back tomorrow for Stage {current?.order + 1}!</Text>
                       </>
                     ) : (
                       <>
-                        <Text style={Fonts.guess}>Sorry</Text>
-                        <Text style={Fonts.bold}>Try again tomorrow!</Text>
+                        <Text style={Fonts(theme).guess}>Sorry</Text>
+                        <Text style={Fonts(theme).bold}>Try again tomorrow!</Text>
                       </>
                     ))}
                 </Box>
@@ -248,8 +251,8 @@ const Home: React.FC<FunctionalScreenProps> = ({ setIsLoading, setIsLoggedIn, se
                 >
                   {current.guesses.map((oldGuess, count) => (
                     <View key={`guess-${count}`} style={Styled.guess}>
-                      <Text style={Fonts.bold}>{oldGuess.value}</Text>
-                      <Text style={Fonts.bold}>{formatDate(oldGuess.guessedAt)}</Text>
+                      <Text style={Fonts(theme).bold}>{oldGuess.value}</Text>
+                      <Text style={Fonts(theme).bold}>{formatDate(oldGuess.guessedAt)}</Text>
                     </View>
                   ))}
                 </AccordionBox>

@@ -3,10 +3,13 @@ import { View } from 'react-native';
 
 import Logo from '../../assets/logo.svg';
 
-import Styled from './styles';
+import styles from './styles';
 import SvgComponent from '../../components/svg';
+import { getStyles } from '../../utils/theme';
 
 const Main = (props: any) => {
+  const Styled = getStyles(styles);
+
   return (
     <View style={Styled.main}>
       <View style={Styled.header}>

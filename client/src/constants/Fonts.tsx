@@ -11,46 +11,49 @@ interface TextStyleExport {
   [key: string]: TextStyle;
 }
 
-export default {
-  body: {
-    fontSize: 16,
-  },
-  bodySmall: {
-    fontSize: 12,
-  },
-  bold: {
-    fontWeight: 'bold',
-  },
-  subHeading: {
-    ...Fredoka,
-    fontSize: 20,
-  },
-  heading: {
-    ...Fredoka,
-    fontSize: 24,
-  },
-  input: {
-    fontSize: 20,
-    color: getTheme().primary,
-    fontWeight: 'bold',
-  },
-  label: {
-    ...Fredoka,
-    fontSize: 14,
-  },
-  riddle: {
-    fontSize: 20,
-  },
-  guess: {
-    ...Fredoka,
-    fontSize: 30,
-    textAlign: 'center',
-    color: getTheme().primary,
-  },
-  stat: {
-    ...Fredoka,
-    fontSize: 50,
-    textAlign: 'center',
-    color: getTheme().primary,
-  },
-} as TextStyleExport;
+const Fonts = (theme) =>
+  ({
+    body: {
+      fontSize: 16,
+    },
+    bodySmall: {
+      fontSize: 12,
+    },
+    bold: {
+      fontWeight: 'bold',
+    },
+    subHeading: {
+      ...Fredoka,
+      fontSize: 20,
+    },
+    heading: {
+      ...Fredoka,
+      fontSize: 24,
+    },
+    input: {
+      fontSize: 20,
+      color: getTheme(theme).primary,
+      fontWeight: 'bold',
+    },
+    label: {
+      ...Fredoka,
+      fontSize: 14,
+    },
+    riddle: {
+      fontSize: 20,
+    },
+    guess: {
+      ...Fredoka,
+      fontSize: 30,
+      textAlign: 'center',
+      color: getTheme(theme).primary,
+    },
+    stat: {
+      ...Fredoka,
+      fontSize: 50,
+      textAlign: 'center',
+      color: getTheme(theme).primary,
+    },
+  } as TextStyleExport);
+
+export default Fonts;

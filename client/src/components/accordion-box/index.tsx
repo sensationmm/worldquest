@@ -1,5 +1,5 @@
 import classNames from 'classnames-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TouchableHighlight, View } from 'react-native';
 
 import Colors from '../../constants/Colors';
@@ -9,9 +9,12 @@ import Styled from './styles';
 
 import { getTheme } from '../../utils/theme';
 import { AccordionBoxProps } from './accordion-box.types';
+import { ThemeContext } from '../../App';
+import { Theme } from '../../types/User.types';
 
 const AccordionBox: React.FC<AccordionBoxProps> = ({ children, defaultOpen = false, ...rest }) => {
   const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     setIsOpen(defaultOpen);
@@ -30,7 +33,7 @@ const AccordionBox: React.FC<AccordionBoxProps> = ({ children, defaultOpen = fal
           <Icon
             name={isOpen ? 'chevron-up' : 'chevron-down'}
             onClick={() => setIsOpen(!isOpen)}
-            color={getTheme().primary}
+            color={getTheme(theme as Theme).primary}
           />
         </TouchableHighlight>
       }

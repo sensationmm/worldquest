@@ -4,11 +4,21 @@ import { Image, Text, View } from 'react-native';
 
 import Colors from '../../constants/Colors';
 import onlyUnique from '../../utils/onlyUnique';
-import Styled from './styles';
+import styles from './styles';
 
 import { BoxProps, CoreBoxProps } from './box.types';
+import { getStyles } from '../../utils/theme';
 
-const Box: React.FC<BoxProps> = ({ children, title, icon, action, centered = false, isError = false, showContent = true }) => {
+const Box: React.FC<BoxProps> = ({
+  children,
+  title,
+  icon,
+  action,
+  centered = false,
+  isError = false,
+  showContent = true,
+}) => {
+  const Styled = getStyles(styles);
   const checkChildArray = Array.isArray(children) ? onlyUnique(children) : [];
   const isEmpty = !children || (checkChildArray.length === 1 && !checkChildArray[0]);
 
