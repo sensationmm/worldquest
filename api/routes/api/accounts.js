@@ -7,8 +7,9 @@ const keys = require('../../config/keys');
 const passport = require('passport');
 
 // Load input validation
-const validateRegisterInput = require('../../validation/register');
+const validateEditInput = require('../../validation/edit');
 const validateLoginInput = require('../../validation/login');
+const validateRegisterInput = require('../../validation/register');
 
 // Load User model
 const User = require('../../models/User');
@@ -154,7 +155,7 @@ router.post('/buyClues', passport.authenticate('jwt', { session: false }), (req,
     const { numClues } = req.body;
 
     if (!numClues) {
-      res.status(400).json({ msg: 'numClues must be provided' });
+      return res.status(400).json({ msg: 'numClues must be provided' });
     }
 
     User.findOneAndUpdate({ email: req.user.email }, { $set: { clue_tokens: req.user.clue_tokens + parseInt(numClues) } }, { new: true })
@@ -173,11 +174,33 @@ router.post('/theme', passport.authenticate('jwt', { session: false }), (req, re
     const { theme } = req.body;
 
     if (!theme) {
-      res.status(400).json({ msg: 'theme must be provided' });
+      return res.status(400).json({ msg: 'theme must be provided' });
     }
 
     User.findOneAndUpdate({ email: req.user.email }, { $set: { theme: theme } }, { new: true })
       .then((data) => res.json({ success: true, msg: 'Theme updated', theme: data.theme }))
+      .catch(() => res.status(400).json({ msg: 'User not found' }));
+  },
+  (error) => {
+    res.status(400).json({ msg: error });
+  },
+);
+
+// @route   POST api/accounts/edit
+// @desc    Edit user profile details
+// @access  Private
+router.post('/edit', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const { name, email, avatar } = req.body;
+
+    const { errors, isValid } = validateEditInput(req.body);
+
+    // Check validation
+    if (!isValid) {
+      return res.status(400).json({ msg: errors });
+    }
+
+    User.findOneAndUpdate({ email: req.user.email }, { $set: { name: name, email: email, avatar: avatar } }, { new: true })
+      .then((data) => res.json({ success: true, msg: 'User updated', user: { name: data.name, email: data.email, avatar: data.avatar } }))
       .catch(() => res.status(400).json({ msg: 'User not found' }));
   },
   (error) => {

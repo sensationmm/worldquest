@@ -31,6 +31,7 @@ const Register: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
       if (response.status === 200) {
         AccountService.login(email, password).then(async (response) => {
           if (response.status === 200) {
+            setError(undefined);
             await SecureStore.setItemAsync('jwt_token', response.data.token).then(async () => {
               await ProgressService.start().then(() => {
                 setIsLoggedIn(true);

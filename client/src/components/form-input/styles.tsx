@@ -12,6 +12,8 @@ const styles = (theme) =>
       backgroundColor: Colors.basic.white,
       borderRadius: 20,
       padding: 20,
+      borderStyle: 'solid',
+      borderWidth: 1,
     },
     label: {
       ...Fonts(theme).label,

@@ -54,6 +54,21 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
+  editDetails = (name: string, email: string, avatar: string) => {
+    const config = {
+      url: 'accounts/edit',
+      method: 'post',
+      unauthed: false,
+      data: {
+        name,
+        email,
+        avatar,
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
   saveTheme = (theme: Theme) => {
     const config = {
       url: 'accounts/theme',

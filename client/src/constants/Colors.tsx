@@ -1,37 +1,60 @@
-interface ColorExport {
-  [key: string]: any;
-}
+type ColorValueHex = `#${string}`;
 
-export default {
+type ColorExport = {
+  [key: string]: {
+    [key: string]: ColorValueHex;
+  };
+};
+
+type ThemeExport = {
+  [key: string]: {
+    primary: ColorValueHex;
+    secondary: ColorValueHex;
+    tertiary: ColorValueHex;
+  };
+};
+
+const themes = {
   brand: {
     primary: '#9c0f97',
     secondary: '#440f42',
+    tertiary: '#780574',
   },
   brand2: {
     primary: '#1a8fd9',
     secondary: '#0f24be',
+    tertiary: '#4c5fea',
   },
   brand3: {
     primary: '#ea5b05',
     secondary: '#843303',
+    tertiary: '#c84c02',
   },
   brand4: {
     primary: '#08b415',
     secondary: '#004a05',
+    tertiary: '#008f0a',
   },
   brand5: {
-    primary: '#740e04',
-    secondary: '#e46f63',
+    primary: '#9b0a0a',
+    secondary: '#5c0101',
+    tertiary: '#7a0000',
   },
   brand6: {
-    primary: '#000000',
+    primary: '#888888',
     secondary: '#555555',
+    tertiary: '#777777',
   },
+} as ThemeExport;
+
+export default {
+  ...themes,
   basic: {
     white: '#ffffff',
     black: '#000000',
     shadow: '#444444',
     border: '#cccccc',
+    offset: '#999999',
     error: '#660000',
   },
   indicator: {

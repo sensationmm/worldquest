@@ -8,6 +8,7 @@ import { getStyles } from '../../utils/theme';
 import { ThemeContext } from '../../App';
 
 interface ButtonProps {
+  type?: 'primary' | 'secondary';
   label: string;
   isPassword?: boolean;
   onClick: () => void;
@@ -15,7 +16,7 @@ interface ButtonProps {
   small?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onClick, disabled = false, small = false }) => {
+const Button: React.FC<ButtonProps> = ({ type = 'primary', label, onClick, disabled = false, small = false }) => {
   const Styled = getStyles(styles);
   const themeContext = useContext(ThemeContext);
 
@@ -26,7 +27,14 @@ const Button: React.FC<ButtonProps> = ({ label, onClick, disabled = false, small
       underlayColor={'transparent'}
       style={{ borderRadius: 20 }}
     >
-      <View style={classNames(Styled.main, small && Styled.small, disabled && Styled.disabled)}>
+      <View
+        style={classNames(
+          Styled.main,
+          type === 'primary' ? Styled.primary : Styled.secondary,
+          small && Styled.small,
+          disabled && Styled.disabled
+        )}
+      >
         <Text style={classNames(Fonts(themeContext).subHeading, Styled.buttonText, small && Styled.buttonTextSmall)}>
           {label}
         </Text>
