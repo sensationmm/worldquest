@@ -19,7 +19,7 @@ class BaseService {
     this.config = this.getConfig();
   }
 
-  getConfig = async (unauthed: boolean = false) => {
+  getConfig = async (unauthed: boolean = false, headers?) => {
     const auth = await SecureStore.getItemAsync('jwt_token');
     let token = undefined;
 
@@ -35,13 +35,16 @@ class BaseService {
       headers: {
         'Content-Type': 'application/json',
         Authorization: token ? token : undefined,
+        ...headers,
       },
     };
   };
 
   doRequest = async (config: ConfigType, callback?: (res: any) => void) => {
+    const headers = config.headers;
+    delete config.headers;
     const configData = {
-      ...(await this.getConfig(config.unauthed)),
+      ...(await this.getConfig(config.unauthed, headers)),
       ...config,
     };
 
@@ -52,15 +55,15 @@ class BaseService {
           callback(response);
         }
 
-        console.log(`${config.url.toUpperCase()} SUCCESS`);
         if (config.data) {
           console.log(config.data);
         }
         console.log({ ...response.data });
 
+        console.log(`${config.url.toUpperCase()} SUCCESS`);
         return {
-          status: response.status,
-          data: response.data,
+          status: response?.status ? response.status : '',
+          data: response?.data ? response.data : response,
         };
       })
       .catch((error: any) => {
@@ -72,8 +75,8 @@ class BaseService {
         console.log('error.data', error.response.data.msg);
 
         return {
-          status: error?.response.status,
-          msg: error?.response.data?.msg,
+          status: error?.response?.status || '',
+          msg: error?.response?.data?.msg || '',
         };
       });
   };

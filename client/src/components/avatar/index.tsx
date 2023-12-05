@@ -8,19 +8,24 @@ import { getStyles } from '../../utils/theme';
 
 type AvatarProps = {
   src: string;
+  size?: 'small' | 'medium' | 'large';
+  children?: JSX.Element;
 };
-const Avatar: React.FC<AvatarProps> = ({ src }) => {
+const Avatar: React.FC<AvatarProps> = ({ src, size = 'small', children }) => {
   const Styled = getStyles(styles);
 
   return (
-    <View style={Styled.avatarContainer}>
-      {src !== '' ? (
-        <Image style={Styled.avatar} source={{ uri: src }} />
-      ) : (
-        <View style={Styled.avatarPlaceholder}>
-          <Icon name='user' size={IconSize.LARGE} color={Colors.basic.border} />
-        </View>
-      )}
+    <View>
+      <View style={{ ...Styled.avatarContainer, ...Styled[`size${size}`] }}>
+        {src && src !== '' ? (
+          <Image style={Styled.avatar} source={{ uri: src }} />
+        ) : (
+          <View style={Styled.avatarPlaceholder}>
+            <Icon name='user' size={IconSize.LARGE} color={Colors.basic.border} />
+          </View>
+        )}
+        {children && <View style={Styled.overlay}>{children}</View>}
+      </View>
     </View>
   );
 };

@@ -5,13 +5,17 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
+const multer = require('multer');
+const upload = multer();
+const { uuid } = require('uuidv4');
 
 // Load input validation
 const validateEditInput = require('../../validation/edit');
 const validateLoginInput = require('../../validation/login');
 const validateRegisterInput = require('../../validation/register');
 
-// Load User model
+// Load models
+const Image = require('../../models/Image');
 const User = require('../../models/User');
 
 // @route   GET api/accounts/test
@@ -189,9 +193,8 @@ router.post('/theme', passport.authenticate('jwt', { session: false }), (req, re
 // @route   POST api/accounts/edit
 // @desc    Edit user profile details
 // @access  Private
-router.post('/edit', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/edit', [passport.authenticate('jwt', { session: false }), upload.single('image')], async (req, res) => {
     const { name, email, avatar } = req.body;
-
     const { errors, isValid } = validateEditInput(req.body);
 
     // Check validation
@@ -199,7 +202,7 @@ router.post('/edit', passport.authenticate('jwt', { session: false }), (req, res
       return res.status(400).json({ msg: errors });
     }
 
-    User.findOneAndUpdate({ email: req.user.email }, { $set: { name: name, email: email, avatar: avatar } }, { new: true })
+    User.findOneAndUpdate({ email: req.user.email }, { $set: { name: name, email: email, avatar: avatar || '' } }, { new: true })
       .then((data) => res.json({ success: true, msg: 'User updated', user: { name: data.name, email: data.email, avatar: data.avatar } }))
       .catch(() => res.status(400).json({ msg: 'User not found' }));
   },
@@ -207,5 +210,45 @@ router.post('/edit', passport.authenticate('jwt', { session: false }), (req, res
     res.status(400).json({ msg: error });
   },
 );
+
+// @route   POST api/accounts/images
+// @desc    Upload user avatar
+// @access  Private
+router.post('/images', upload.single('image'), async (req, res, next) => {
+    if (!req.file) {
+      return res.status(400).json({success: false, message: 'No file provided.'});
+    }
+    const image = new Image({
+      name: `${uuid()}.${req.file.mimetype.split('/')[1]}`,
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    });
+
+    try {
+      await image.save();
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({success: false, message: error.message});
+    }
+    return res.status(201).json({
+        success: true,
+        message: 'Image created successfully.',
+        imageName: image.name,
+      });
+  },
+);
+
+// @route   GET api/accounts/images/<name>
+// @desc    Fetches user avatar image
+// @access  Private
+router.get('/images/:name', async (req, res) => {
+  const {name} = req.params;
+  const image = await Image.findOne({name: name});
+  if (!image) {
+    return res.status(404).json({success: false, message: 'Image not found.'});
+  }
+  res.set('Content-Type', 'blob');
+  return res.status(200).send(image.data);
+});
 
 module.exports = router;

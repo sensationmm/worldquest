@@ -69,6 +69,34 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
+  editAvatar = (avatar: FormData) => {
+    const config = {
+      url: 'accounts/images',
+      method: 'post',
+      unauthed: false,
+      data: avatar,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
+  getAvatar = (avatar: string) => {
+    const config = {
+      url: `accounts/images/${avatar}`,
+      unauthed: false,
+      responseType: 'blob',
+      headers: {
+        ContentType: 'blob',
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
   saveTheme = (theme: Theme) => {
     const config = {
       url: 'accounts/theme',

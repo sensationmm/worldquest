@@ -9,9 +9,13 @@ const styles = (theme) =>
     ...ProgressStyles,
     avatarContainer: {
       position: 'absolute',
-      top: 15,
-      right: 15,
+      top: 10,
+      right: 10,
       zIndex: 2,
+    },
+    avatarEditContainer: {
+      display: 'flex',
+      marginBottom: 20,
     },
     clueSection: {
       display: 'flex',

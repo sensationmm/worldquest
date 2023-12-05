@@ -1,7 +1,9 @@
 import * as SecureStore from 'expo-secure-store';
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, TouchableHighlight, View } from 'react-native';
+import { Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import '../utils/chunk';
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 import accountService from '../services/AccountService';
 import { Theme, User } from '../types/User.types';
@@ -17,11 +19,17 @@ import Fonts from '../constants/Fonts';
 import Tokens from '../constants/Tokens';
 import { formatDate } from '../utils/date';
 
-import { getStyles, getTheme } from '../utils/theme';
+import { getStyles } from '../utils/theme';
 import styles from './Profile.styles';
 import SvgComponent from '../components/svg';
 import Avatar from '../components/avatar';
 import FormInput from '../components/form-input';
+
+type FileUploadBlob = {
+  name: String;
+  uri: String;
+  type: String;
+};
 
 const Profile: React.FC<FunctionalScreenProps> = ({
   setIsLoading,
@@ -33,6 +41,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
   const Styled = getStyles(styles);
   const AccountService = new accountService();
   const [currentUser, setCurrentUser] = useState<User>();
+  const [userAvatar, setUserAvatar] = useState<string>();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [editValues, setEditValues] = useState({ name: '', email: '', avatar: '' });
   const [error, setError] = useState(undefined);
@@ -41,14 +50,28 @@ const Profile: React.FC<FunctionalScreenProps> = ({
 
   const getCurrentUser = async () => {
     setIsLoading(true);
-    await AccountService.current().then((res) => {
-      setCurrentUser(res.data);
-      setEditValues({
-        name: res.data.name,
-        email: res.data.email,
-        avatar: res.data.avatar,
-      });
-      setIsLoading(false);
+    await AccountService.current().then(async (res) => {
+      if (res.status === 200) {
+        setCurrentUser({ ...res.data });
+        setEditValues({
+          ...editValues,
+          name: res.data.name,
+          email: res.data.email,
+        });
+
+        if (res.data.avatar !== '') {
+          await AccountService.getAvatar(res.data.avatar).then(async (res2) => {
+            if (res2.status === 200) {
+              setUserAvatar(URL.createObjectURL(res2.data));
+              setIsLoading(false);
+            }
+          });
+        }
+      } else {
+        setIsLoggedIn(false);
+        await SecureStore.deleteItemAsync('jwt_token');
+        setIsLoading(false);
+      }
     });
   };
 
@@ -80,25 +103,52 @@ const Profile: React.FC<FunctionalScreenProps> = ({
     }
   };
 
+  const createFormData = (uri) => {
+    const fileName = uri.split('/').pop();
+    const fileType = fileName.split('.').pop();
+    const formData = new FormData();
+    formData.append('image', {
+      name: fileName,
+      uri,
+      type: `image/${fileType}`,
+    });
+    return formData;
+  };
+
   const editDetails = async () => {
     setIsLoading(true);
+
     if (currentUser) {
-      AccountService.editDetails(editValues.name, editValues.email, editValues.avatar).then((response) => {
-        if (response.status === 200) {
-          setError(undefined);
-          setCurrentUser({
-            ...currentUser,
-            name: response.data.name,
-            email: response.data.email,
-            avatar: response.data.avatar,
-          });
-          setIsEdit(false);
-          getCurrentUser();
-        } else {
-          setError(response.msg);
-          setIsLoading(false);
+      let editAvatar = undefined;
+
+      if (editValues.avatar != '') {
+        const resizedAvatar = await ImageManipulator.manipulateAsync(editValues.avatar, [{ resize: { width: 120 } }], {
+          compress: 0.7,
+          format: 'jpeg' as ImageManipulator.SaveFormat,
+        });
+
+        const avatar = await AccountService.editAvatar(createFormData(resizedAvatar.uri));
+        editAvatar = avatar.data.imageName;
+      }
+
+      AccountService.editDetails(editValues.name, editValues.email, editAvatar || currentUser.avatar).then(
+        (response) => {
+          if (response.status === 200) {
+            setError(undefined);
+            setCurrentUser({
+              ...currentUser,
+              name: response.data.name,
+              email: response.data.email,
+              avatar: response.data.avatar,
+            });
+            setIsEdit(false);
+            getCurrentUser();
+          } else {
+            setError(response.msg);
+            setIsLoading(false);
+          }
         }
-      });
+      );
     }
   };
 
@@ -123,6 +173,30 @@ const Profile: React.FC<FunctionalScreenProps> = ({
     });
   };
 
+  const pickImageAsync = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+        return;
+      } else {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: false,
+          quality: 1,
+        });
+        if (!result.canceled) {
+          setEditValues({
+            ...editValues,
+            avatar: result.assets[0].uri,
+          });
+        }
+      }
+    } catch (error) {
+      console.log('catch', error);
+    }
+  };
+
   const validateEdit = editValues.name !== '' && editValues.email !== '';
 
   return (
@@ -138,7 +212,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
             {currentUser && (
               <>
                 <View style={Styled.avatarContainer}>
-                  <Avatar src={currentUser.avatar} />
+                  <Avatar src={userAvatar} size='medium' />
                 </View>
                 <View>
                   <View style={Styled.section}>
@@ -219,6 +293,11 @@ const Profile: React.FC<FunctionalScreenProps> = ({
       ) : (
         <>
           {error && <ErrorBox>{error}</ErrorBox>}
+          <View style={Styled.avatarEditContainer}>
+            <TouchableOpacity onPress={pickImageAsync}>
+              <Avatar src={editValues.avatar || userAvatar} size='large' />
+            </TouchableOpacity>
+          </View>
           <FormInput label={'Name'} value={editValues?.name} onChange={(val: string) => onType(val, 'name')} />
           <FormInput
             label={'Email Address'}
