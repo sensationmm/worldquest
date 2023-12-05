@@ -55,19 +55,19 @@ class BaseService {
           callback(response);
         }
 
+        console.log(`${configData.method.toUpperCase()} ${config.url.toUpperCase()} SUCCESS`);
+
         if (config.data) {
           console.log(config.data);
         }
         console.log({ ...response.data });
-
-        console.log(`${config.url.toUpperCase()} SUCCESS`);
         return {
           status: response?.status ? response.status : '',
           data: response?.data ? response.data : response,
         };
       })
       .catch((error: any) => {
-        console.log(`${config.url.toUpperCase()} FAILURE`);
+        console.log(`${configData.method.toUpperCase()} ${config.url.toUpperCase()} FAILURE`);
         if (config.data) {
           console.log(config.data);
         }

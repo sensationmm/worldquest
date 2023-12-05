@@ -63,10 +63,10 @@ const Profile: React.FC<FunctionalScreenProps> = ({
           await AccountService.getAvatar(res.data.avatar).then(async (res2) => {
             if (res2.status === 200) {
               setUserAvatar(URL.createObjectURL(res2.data));
-              setIsLoading(false);
             }
           });
         }
+        setIsLoading(false);
       } else {
         setIsLoggedIn(false);
         await SecureStore.deleteItemAsync('jwt_token');
@@ -127,8 +127,10 @@ const Profile: React.FC<FunctionalScreenProps> = ({
           format: 'jpeg' as ImageManipulator.SaveFormat,
         });
 
-        const avatar = await AccountService.editAvatar(createFormData(resizedAvatar.uri));
-        editAvatar = avatar.data.imageName;
+        await AccountService.editAvatar(createFormData(resizedAvatar.uri)).then(async (avatar) => {
+          await AccountService.deleteAvatar(currentUser.avatar);
+          editAvatar = avatar.data.imageName;
+        });
       }
 
       AccountService.editDetails(editValues.name, editValues.email, editAvatar || currentUser.avatar).then(

@@ -21,7 +21,14 @@ router.get('/test', (req, res) =>
 // @desc    Gets latest stats
 // @access  Private
 router.get('/latest', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  await Stats.findOne(null, null, { sort: { date: -1 }}).then(data => res.json(data))
+  await Stats.findOne(null, null, { sort: { date: -1 }}).then(data => res.json({
+    leader: data.leader,
+    completedStages: data.completedStages,
+    date: data.date,
+    totalUsers: data.totalUsers,
+    numUsersPerStage: data.numUsersPerStage,
+    numUsersPerStageMax: data.numUsersPerStageMax,
+  }))
 })
 
 // @route   GET api/stats/generate

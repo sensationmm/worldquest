@@ -97,6 +97,16 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
+  deleteAvatar = (avatar: string) => {
+    const config = {
+      url: `accounts/images/${avatar}`,
+      method: 'delete',
+      unauthed: false,
+    };
+
+    return this.doRequest(config);
+  };
+
   saveTheme = (theme: Theme) => {
     const config = {
       url: 'accounts/theme',

@@ -14,9 +14,11 @@ import { formatDate } from '../utils/date';
 import Avatar from '../components/avatar';
 import Vars from '../constants/Vars';
 import { getStyles } from '../utils/theme';
+import accountService from '../services/AccountService';
 
 const Stats: React.FC<FunctionalScreenProps> = ({ setIsLoading }) => {
   const StatsService = new statsService();
+  const AccountService = new accountService();
   const [stats, setStats] = useState<Stat>();
   const Styled = getStyles(styles);
   const theme = useContext(ThemeContext);
@@ -27,16 +29,26 @@ const Stats: React.FC<FunctionalScreenProps> = ({ setIsLoading }) => {
 
   const getLatestStats = async () => {
     setIsLoading(true);
-    await StatsService.latest().then((res) => {
+    await StatsService.latest().then(async (res) => {
       if (res.status === 200) {
-        setStats({
+        const stats = {
           completedStages: res.data.completedStages,
           date: res.data.date,
           leader: res.data.leader,
           numUsersPerStage: res.data.numUsersPerStage,
           numUsersPerStageMax: res.data.numUsersPerStageMax,
           totalUsers: res.data.totalUsers,
-        });
+        };
+
+        if (res.data.leader.avatar !== '') {
+          await AccountService.getAvatar(res.data.leader.avatar).then(async (res2) => {
+            if (res2.status === 200) {
+              stats.leader.avatar = URL.createObjectURL(res2.data);
+            }
+          });
+        }
+
+        setStats(stats);
       }
     });
     setIsLoading(false);

@@ -251,4 +251,17 @@ router.get('/images/:name', async (req, res) => {
   return res.status(200).send(image.data);
 });
 
+// @route   DELETE api/accounts/images/<name>
+// @desc    Fetches user avatar image
+// @access  Private
+router.delete('/images/:name', async (req, res) => {
+  const {name} = req.params;
+  await Image.findOneAndDelete({name: name});
+  return res.status(200).json({
+    success: true,
+    message: 'Image deleted successfully.',
+    imageName: name,
+  });
+});
+
 module.exports = router;
