@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import '../utils/chunk';
 import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 
 import accountService from '../services/AccountService';
 import { Theme, User } from '../types/User.types';
@@ -25,12 +25,6 @@ import SvgComponent from '../components/svg';
 import Avatar from '../components/avatar';
 import FormInput from '../components/form-input';
 
-type FileUploadBlob = {
-  name: String;
-  uri: String;
-  type: String;
-};
-
 const Profile: React.FC<FunctionalScreenProps> = ({
   setIsLoading,
   setIsLoggedIn,
@@ -43,7 +37,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
   const [currentUser, setCurrentUser] = useState<User>();
   const [userAvatar, setUserAvatar] = useState<string>();
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [editValues, setEditValues] = useState({ name: '', email: '', avatar: '' });
+  const [editValues, setEditValues] = useState({ name: '', email: '', avatar: '', avatarWidth: 0, avatarHeight: 0 });
   const [error, setError] = useState(undefined);
 
   const themeContext = useContext(ThemeContext);
@@ -122,9 +116,11 @@ const Profile: React.FC<FunctionalScreenProps> = ({
       let editAvatar = undefined;
 
       if (editValues.avatar != '') {
-        const resizedAvatar = await ImageManipulator.manipulateAsync(editValues.avatar, [{ resize: { width: 120 } }], {
+        const resizeDimension = editValues.avatarWidth >= editValues.avatarHeight ? 'height' : 'width';
+
+        const resizedAvatar = await manipulateAsync(editValues.avatar, [{ resize: { [resizeDimension]: 120 } }], {
           compress: 0.7,
-          format: 'jpeg' as ImageManipulator.SaveFormat,
+          format: SaveFormat.JPEG,
         });
 
         await AccountService.editAvatar(createFormData(resizedAvatar.uri)).then(async (avatar) => {
@@ -191,6 +187,8 @@ const Profile: React.FC<FunctionalScreenProps> = ({
           setEditValues({
             ...editValues,
             avatar: result.assets[0].uri,
+            avatarWidth: result.assets[0].width,
+            avatarHeight: result.assets[0].height,
           });
         }
       }
@@ -296,8 +294,11 @@ const Profile: React.FC<FunctionalScreenProps> = ({
         <>
           {error && <ErrorBox>{error}</ErrorBox>}
           <View style={Styled.avatarEditContainer}>
-            <TouchableOpacity onPress={pickImageAsync}>
+            <TouchableOpacity onPress={pickImageAsync} style={{ width: 160 }}>
               <Avatar src={editValues.avatar || userAvatar} size='large' />
+              <View style={Styled.avatarEditOverlay}>
+                <Icon name='camera' size={IconSize.LARGE} color={Colors.basic.border} />
+              </View>
             </TouchableOpacity>
           </View>
           <FormInput label={'Name'} value={editValues?.name} onChange={(val: string) => onType(val, 'name')} />

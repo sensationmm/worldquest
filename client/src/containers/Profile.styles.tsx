@@ -17,6 +17,15 @@ const styles = (theme) =>
       display: 'flex',
       marginBottom: 20,
     },
+    avatarEditOverlay: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      opacity: 0.5,
+    },
     clueSection: {
       display: 'flex',
       flexDirection: 'row',

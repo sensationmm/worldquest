@@ -247,7 +247,7 @@ router.get('/images/:name', async (req, res) => {
   if (!image) {
     return res.status(404).json({success: false, message: 'Image not found.'});
   }
-  res.set('Content-Type', 'blob');
+  res.set('Content-Type', 'image/jpeg');
   return res.status(200).send(image.data);
 });
 
