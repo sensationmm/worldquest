@@ -12,12 +12,14 @@ import progressService from '../services/ProgressService';
 
 import Fonts from '../constants/Fonts';
 import { Link } from '@react-navigation/native';
+import { AvatarPlaceholder } from '../components/avatar';
+import generateRandomNumber from '../utils/generateRandomNumber';
 
 const Register: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState('Bruno Reynolds');
+  const [password, setPassword] = useState('abc123!');
+  const [password2, setPassword2] = useState('abc123!');
+  const [email, setEmail] = useState('kevin.reynolds1@gmail.com');
   const [error, setError] = useState(undefined);
   const theme = useContext(ThemeContext);
 
@@ -26,8 +28,11 @@ const Register: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
 
   const onRegister = async () => {
     setIsLoading(true);
+    const avatarOptions = Object.keys(AvatarPlaceholder).filter((key) => isNaN(Number(key)));
+    const avatarSelect = generateRandomNumber(avatarOptions.length, true);
+    const newAvatar = avatarOptions[avatarSelect] as unknown as AvatarPlaceholder;
 
-    AccountService.register(name, email, password, password2).then(async (response) => {
+    AccountService.register(name, email, password, password2, newAvatar).then(async (response) => {
       if (response.status === 200) {
         AccountService.login(email, password).then(async (response) => {
           if (response.status === 200) {

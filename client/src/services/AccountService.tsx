@@ -1,3 +1,4 @@
+import { AvatarPlaceholder } from '../components/avatar';
 import { Theme } from '../types/User.types';
 import BaseService from './BaseService';
 
@@ -16,7 +17,7 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
-  register = (name: string, email: string, password: string, password2: string) => {
+  register = (name: string, email: string, password: string, password2: string, avatar: AvatarPlaceholder) => {
     const config = {
       url: 'accounts/register',
       method: 'post',
@@ -26,6 +27,7 @@ class AccountService extends BaseService {
         email,
         password,
         password2,
+        avatar,
       },
     };
 
