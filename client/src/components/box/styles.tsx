@@ -39,7 +39,7 @@ const styles = (theme) =>
       alignContent: 'center',
     },
     titleMargined: {
-      marginBottom: 20,
+      marginBottom: 10,
     },
     action: {
       display: 'flex',

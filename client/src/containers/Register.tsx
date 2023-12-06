@@ -16,10 +16,10 @@ import { AvatarPlaceholder } from '../components/avatar';
 import generateRandomNumber from '../utils/generateRandomNumber';
 
 const Register: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
-  const [name, setName] = useState('Bruno Reynolds');
-  const [password, setPassword] = useState('abc123!');
-  const [password2, setPassword2] = useState('abc123!');
-  const [email, setEmail] = useState('kevin.reynolds1@gmail.com');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState(undefined);
   const theme = useContext(ThemeContext);
 
