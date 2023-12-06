@@ -49,6 +49,7 @@ router.post('/register', (req, res) => {
         password: req.body.password,
         avatar: req.body.avatar,
         clue_tokens: 5,
+        theme: 'brand'
       });
 
       bcrypt.genSalt(10, (err, salt) => {
