@@ -36,7 +36,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
   const AccountService = new accountService();
   const [currentUser, setCurrentUser] = useState<User>();
   const [userAvatar, setUserAvatar] = useState<string>();
-  const [isEdit, setIsEdit] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [editValues, setEditValues] = useState({ name: '', email: '', avatar: '', avatarWidth: 0, avatarHeight: 0 });
   const [error, setError] = useState(undefined);
 
@@ -126,10 +126,12 @@ const Profile: React.FC<FunctionalScreenProps> = ({
           });
 
           await AccountService.editAvatar(createFormData(resizedAvatar.uri)).then(async (avatar) => {
-            await AccountService.deleteAvatar(currentUser.avatar);
+            if (currentUser.avatar.substring(0, 3) !== 'wq-') {
+              await AccountService.deleteAvatar(currentUser.avatar);
+            }
             editAvatar = avatar.data.imageName;
           });
-        } else {
+        } else if (currentUser.avatar.substring(0, 3) !== 'wq-') {
           await AccountService.deleteAvatar(currentUser.avatar);
         }
       }
@@ -215,7 +217,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
 
   const validateEdit = editValues.name !== '' && editValues.email !== '';
   const isAvatarPlaceholder =
-    editValues.avatar.substring(0, 3) === 'wq-' || currentUser?.avatar.substring(0, 3) === 'wq-';
+    editValues?.avatar?.substring(0, 3) === 'wq-' || currentUser?.avatar?.substring(0, 3) === 'wq-';
 
   return (
     <View>
@@ -326,7 +328,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
               {Object.keys(AvatarPlaceholder)
                 .filter((key) => !isNaN(Number(key)))
                 .map((av, count) => (
-                  <TouchableHighlight
+                  <TouchableOpacity
                     key={`avatar-option-${count}`}
                     style={{ padding: 3 }}
                     onPress={() => setEditValues({ ...editValues, avatar: AvatarPlaceholder[av] })}
@@ -340,11 +342,13 @@ const Profile: React.FC<FunctionalScreenProps> = ({
                         </View>
                       )}
                     </>
-                  </TouchableHighlight>
+                  </TouchableOpacity>
                 ))}
-              <TouchableHighlight style={{ padding: 3 }} onPress={pickImageAsync}>
-                <Avatar src={''} size='tiny' />
-              </TouchableHighlight>
+              <TouchableOpacity style={{ padding: 3 }} onPress={pickImageAsync}>
+                <View style={Styled.uploadImageTrigger}>
+                  <Icon name='camera' color={Colors.basic.white} />
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
           <FormInput label={'Name'} value={editValues?.name} onChange={(val: string) => onType(val, 'name')} />

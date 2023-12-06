@@ -77,6 +77,21 @@ const styles = (theme) =>
       left: 10,
       color: Colors.basic.error,
     },
+    uploadImageTrigger: {
+      position: 'relative',
+      backgroundColor: getTheme(theme).secondary,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 80,
+      overflow: 'hidden',
+      borderColor: getTheme(theme).secondary,
+      borderStyle: 'solid',
+      zIndex: 1,
+      width: 50,
+      height: 50,
+      borderWidth: 3,
+    },
   });
 
 export default styles;
