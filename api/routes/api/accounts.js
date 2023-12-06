@@ -243,7 +243,7 @@ router.post('/images', upload.single('image'), async (req, res, next) => {
 // @access  Private
 router.get('/images/:name', async (req, res) => {
   const {name} = req.params;
-  const image = await Image.findOne({name: name});
+  const image = await Image.findOne({name: name}).catch(() => res.status(400).json({ success: false, msg: 'Image not found' }));
   if (!image) {
     return res.status(404).json({success: false, message: 'Image not found.'});
   }
@@ -256,7 +256,7 @@ router.get('/images/:name', async (req, res) => {
 // @access  Private
 router.delete('/images/:name', async (req, res) => {
   const {name} = req.params;
-  await Image.findOneAndDelete({name: name});
+  await Image.findOneAndDelete({name: name}).catch(() => res.status(400).json({ success: false, msg: 'Image not found' }));
   return res.status(200).json({
     success: true,
     message: 'Image deleted successfully.',
