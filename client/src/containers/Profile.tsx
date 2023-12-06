@@ -22,7 +22,7 @@ import { formatDate } from '../utils/date';
 import { getStyles } from '../utils/theme';
 import styles from './Profile.styles';
 import SvgComponent from '../components/svg';
-import Avatar from '../components/avatar';
+import Avatar, { AvatarPlaceholder } from '../components/avatar';
 import FormInput from '../components/form-input';
 
 const Profile: React.FC<FunctionalScreenProps> = ({
@@ -36,7 +36,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
   const AccountService = new accountService();
   const [currentUser, setCurrentUser] = useState<User>();
   const [userAvatar, setUserAvatar] = useState<string>();
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(true);
   const [editValues, setEditValues] = useState({ name: '', email: '', avatar: '', avatarWidth: 0, avatarHeight: 0 });
   const [error, setError] = useState(undefined);
 
@@ -52,13 +52,14 @@ const Profile: React.FC<FunctionalScreenProps> = ({
           name: res.data.name,
           email: res.data.email,
         });
-
-        if (res.data.avatar !== '') {
+        if (res.data.avatar !== '' && res.data.avatar.substring(0, 3) !== 'wq-') {
           await AccountService.getAvatar(res.data.avatar).then(async (res2) => {
             if (res2.status === 200) {
               setUserAvatar(URL.createObjectURL(res2.data));
             }
           });
+        } else if (res.data.avatar.substring(0, 3) === 'wq-') {
+          setUserAvatar(res.data.avatar);
         }
         setIsLoading(false);
       } else {
@@ -113,20 +114,24 @@ const Profile: React.FC<FunctionalScreenProps> = ({
     setIsLoading(true);
 
     if (currentUser) {
-      let editAvatar = undefined;
+      let editAvatar = editValues.avatar;
 
-      if (editValues.avatar != '') {
-        const resizeDimension = editValues.avatarWidth >= editValues.avatarHeight ? 'height' : 'width';
+      if (editValues.avatar !== '') {
+        if (editValues.avatar.substring(0, 3) !== 'wq-') {
+          const resizeDimension = editValues.avatarWidth >= editValues.avatarHeight ? 'height' : 'width';
 
-        const resizedAvatar = await manipulateAsync(editValues.avatar, [{ resize: { [resizeDimension]: 120 } }], {
-          compress: 0.7,
-          format: SaveFormat.JPEG,
-        });
+          const resizedAvatar = await manipulateAsync(editValues.avatar, [{ resize: { [resizeDimension]: 120 } }], {
+            compress: 0.7,
+            format: SaveFormat.JPEG,
+          });
 
-        await AccountService.editAvatar(createFormData(resizedAvatar.uri)).then(async (avatar) => {
+          await AccountService.editAvatar(createFormData(resizedAvatar.uri)).then(async (avatar) => {
+            await AccountService.deleteAvatar(currentUser.avatar);
+            editAvatar = avatar.data.imageName;
+          });
+        } else {
           await AccountService.deleteAvatar(currentUser.avatar);
-          editAvatar = avatar.data.imageName;
-        });
+        }
       }
 
       AccountService.editDetails(editValues.name, editValues.email, editAvatar || currentUser.avatar).then(
@@ -197,7 +202,20 @@ const Profile: React.FC<FunctionalScreenProps> = ({
     }
   };
 
+  const cancelEdit = () => {
+    setEditValues({
+      name: currentUser.name,
+      email: currentUser.email,
+      avatar: '',
+      avatarWidth: 0,
+      avatarHeight: 0,
+    });
+    setIsEdit(false);
+  };
+
   const validateEdit = editValues.name !== '' && editValues.email !== '';
+  const isAvatarPlaceholder =
+    editValues.avatar.substring(0, 3) === 'wq-' || currentUser?.avatar.substring(0, 3) === 'wq-';
 
   return (
     <View>
@@ -294,12 +312,40 @@ const Profile: React.FC<FunctionalScreenProps> = ({
         <>
           {error && <ErrorBox>{error}</ErrorBox>}
           <View style={Styled.avatarEditContainer}>
-            <TouchableOpacity onPress={pickImageAsync} style={{ width: 160 }}>
-              <Avatar src={editValues.avatar || userAvatar} size='large' />
-              <View style={Styled.avatarEditOverlay}>
-                <Icon name='camera' size={IconSize.LARGE} color={Colors.basic.border} />
-              </View>
-            </TouchableOpacity>
+            <View style={{ width: '50%' }}>
+              <TouchableOpacity onPress={pickImageAsync} style={{ width: 160 }}>
+                <Avatar src={editValues.avatar || userAvatar} size='large' />
+                {!isAvatarPlaceholder && (
+                  <View style={Styled.avatarEditOverlay}>
+                    <Icon name='camera' size={IconSize.LARGE} color={Colors.basic.border} />
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={{ width: '50%', flexDirection: 'row', flexWrap: 'wrap' }}>
+              {Object.keys(AvatarPlaceholder)
+                .filter((key) => !isNaN(Number(key)))
+                .map((av, count) => (
+                  <TouchableHighlight
+                    key={`avatar-option-${count}`}
+                    style={{ padding: 3 }}
+                    onPress={() => setEditValues({ ...editValues, avatar: AvatarPlaceholder[av] })}
+                  >
+                    <>
+                      <Avatar src={AvatarPlaceholder[av]} size='tiny' />
+                      {(editValues.avatar === AvatarPlaceholder[av] ||
+                        (editValues.avatar === '' && userAvatar === AvatarPlaceholder[av])) && (
+                        <View style={Styled.avatarEditOverlay}>
+                          <Icon name='check-circle' size={IconSize.SMALL} color={Colors[themeContext].secondary} />
+                        </View>
+                      )}
+                    </>
+                  </TouchableHighlight>
+                ))}
+              <TouchableHighlight style={{ padding: 3 }} onPress={pickImageAsync}>
+                <Avatar src={''} size='tiny' />
+              </TouchableHighlight>
+            </View>
           </View>
           <FormInput label={'Name'} value={editValues?.name} onChange={(val: string) => onType(val, 'name')} />
           <FormInput
@@ -308,7 +354,7 @@ const Profile: React.FC<FunctionalScreenProps> = ({
             onChange={(val: string) => onType(val, 'email')}
           />
           <Button onClick={editDetails} label={'Save Details'} disabled={!validateEdit} />
-          <Button type='secondary' onClick={() => setIsEdit(false)} label={'Cancel'} />
+          <Button type='secondary' onClick={cancelEdit} label={'Cancel'} />
         </>
       )}
     </View>

@@ -40,7 +40,7 @@ const Stats: React.FC<FunctionalScreenProps> = ({ setIsLoading }) => {
           totalUsers: res.data.totalUsers,
         };
 
-        if (res.data.leader.avatar !== '') {
+        if (res.data.leader.avatar !== '' && res.data.leader.avatar.substring(0, 3) !== 'wq-') {
           await AccountService.getAvatar(res.data.leader.avatar).then(async (res2) => {
             if (res2.status === 200) {
               stats.leader.avatar = URL.createObjectURL(res2.data);

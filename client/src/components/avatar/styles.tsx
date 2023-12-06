@@ -12,22 +12,29 @@ const styles = (theme) =>
       alignItems: 'center',
       borderRadius: 80,
       overflow: 'hidden',
-      borderWidth: 5,
       borderColor: getTheme(theme).secondary,
       borderStyle: 'solid',
       zIndex: 1,
     },
+    sizetiny: {
+      width: 50,
+      height: 50,
+      borderWidth: 3,
+    },
     sizesmall: {
       width: 80,
       height: 80,
+      borderWidth: 3,
     },
     sizemedium: {
       width: 100,
       height: 100,
+      borderWidth: 5,
     },
     sizelarge: {
       width: 160,
       height: 160,
+      borderWidth: 5,
     },
     avatar: {
       width: '100%',

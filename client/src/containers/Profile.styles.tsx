@@ -16,6 +16,7 @@ const styles = (theme) =>
     avatarEditContainer: {
       display: 'flex',
       marginBottom: 20,
+      flexDirection: 'row',
     },
     avatarEditOverlay: {
       position: 'absolute',
@@ -24,7 +25,13 @@ const styles = (theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      opacity: 0.5,
+      paddingLeft: 6,
+      paddingTop: 6,
+    },
+    avatarPlaceholders: {
+      display: 'flex',
+      flex: 5,
+      marginHorizontal: 5,
     },
     clueSection: {
       display: 'flex',
