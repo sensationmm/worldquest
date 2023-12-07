@@ -168,7 +168,7 @@ router.post('/requestReset', (req, res) => {
       return res.status(404).json({ msg: 'User not found' });
     }
 
-    const authCode = generateRandomNumber(9999, 4);
+    const authCode = generateRandomNumber(999999, 6);
 
     user.resetAuth = authCode;
     user.resetAuthExpiry = datefns.addMinutes(Date.now(), 15);

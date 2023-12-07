@@ -20,7 +20,7 @@ module.exports = function validatePasswordResetInput(data, stage = 'request') {
   if(stage === 'auth') {
     if(Validator.isEmpty(data.authCode)) {
       errors.authCode = 'Auth Code is required';
-    } else if(data.authCode.length !== 4) {
+    } else if(data.authCode.length !== 6) {
       errors.authCode = 'Auth Code is invalid';
     }
   }

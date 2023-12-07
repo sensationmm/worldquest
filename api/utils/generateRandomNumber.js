@@ -6,7 +6,7 @@ module.exports = function generateRandomNumber(max, minLength = 1, startZero = f
   }
 
   if (randomNumber.toString().length < minLength) {
-    randomNumber = parseInt(String(randomNumber).padEnd(4, '0'));
+    randomNumber = parseInt(String(randomNumber).padEnd(minLength, '0'));
   }
 
   return randomNumber;

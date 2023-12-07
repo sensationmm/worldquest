@@ -139,7 +139,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
   const submitDisabled =
     (!isReset && (email === '' || password === '' || error !== undefined)) ||
     (isReset && !isAuth && email === '') ||
-    (isReset && isAuth && !isNewPass && (email === '' || authCode === '' || authCode.length < 4)) ||
+    (isReset && isAuth && !isNewPass && (email === '' || authCode === '' || authCode.length !== 6)) ||
     (isReset && isAuth && isNewPass && (password === '' || passwordConfirm === ''));
 
   return (
