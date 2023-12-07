@@ -19,10 +19,11 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
   const [password, setPassword] = useState('Asprilla319!'); // @TODO: remove hardcoded password
   const [error, setError] = useState(undefined);
   const theme = useContext(ThemeContext);
-  const [isReset, setIsReset] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
+  const [isReset, setIsReset] = useState(true);
+  const [isAuth, setIsAuth] = useState(true);
   const [isNewPass, setIsNewPass] = useState(false);
   const [authCode, setAuthCode] = useState('');
+  const [authToken, setAuthToken] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const AccountService = new accountService();
@@ -58,9 +59,29 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
 
   const resetRequest = () => {
     setIsLoading(true);
-    AccountService.requestReset(email).then(() => {
-      setIsAuth(true);
-      setIsLoading(false);
+    AccountService.requestReset(email).then((response) => {
+      if (response.status === 200) {
+        setIsAuth(true);
+        setIsLoading(false);
+      } else {
+        setError(response.msg);
+        setIsLoading(false);
+      }
+    });
+  };
+
+  const authoriseReset = () => {
+    setIsLoading(true);
+    AccountService.authoriseReset(email, authCode).then((response) => {
+      if (response.status === 200) {
+        setAuthCode('');
+        setAuthToken(response.data.token);
+        setIsNewPass(true);
+        setIsLoading(false);
+      } else {
+        setError(response.msg);
+        setIsLoading(false);
+      }
     });
   };
 
@@ -70,7 +91,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
     } else if (!isAuth) {
       resetRequest();
     } else if (!isNewPass) {
-      setIsNewPass(true);
+      authoriseReset();
     }
   };
 
@@ -95,7 +116,9 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
   };
 
   const submitDisabled =
-    (!isReset && (email === '' || password === '' || error !== undefined)) || (!isAuth && email === '');
+    (!isReset && (email === '' || password === '' || error !== undefined)) ||
+    (isReset && !isAuth && email === '') ||
+    (isReset && isAuth && !isNewPass && (email === '' || authCode === '' || authCode.length < 4));
 
   return (
     <View>

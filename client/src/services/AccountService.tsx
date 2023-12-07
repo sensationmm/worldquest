@@ -56,6 +56,20 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
+  authoriseReset = (email: string, authCode: string) => {
+    const config = {
+      url: 'accounts/authoriseReset',
+      method: 'post',
+      unauthed: true,
+      data: {
+        email,
+        authCode,
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
   buyClues = (num: number) => {
     const config = {
       url: 'accounts/buyClues',

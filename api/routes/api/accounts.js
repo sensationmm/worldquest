@@ -13,7 +13,7 @@ const datefns = require('date-fns')
 const validateEditInput = require('../../validation/edit');
 const validateLoginInput = require('../../validation/login');
 const validateRegisterInput = require('../../validation/register');
-const validateResetRequestInput = require('../../validation/resetRequest');
+const validatePasswordResetInput = require('../../validation/passwordReset');
 
 // Load models
 const Image = require('../../models/Image');
@@ -150,10 +150,10 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
 });
 
 // @route   POST api/accounts/requestReset
-// @desc    Initiate password reset request
+// @desc    Initiate password reset flow
 // @access  Public
 router.post('/requestReset', (req, res) => {
-  const { errors, isValid } = validateResetRequestInput(req.body);
+  const { errors, isValid } = validatePasswordResetInput(req.body);
 
   // Check validation
   if (!isValid) {
@@ -187,6 +187,54 @@ router.post('/requestReset', (req, res) => {
     });
   })
 });
+
+// @route   POST api/accounts/authoriseReset
+// @desc    Checks authorisation code in password reset flow
+// @access  Public
+router.post('/authoriseReset', (req, res) => {
+  // Validation
+  const { errors, isValid } = validatePasswordResetInput(req.body, 'auth');
+
+  // Check validation
+  if (!isValid) {
+    return res.status(400).json({ msg: errors });
+  }
+
+  // Check user exists
+  const { email, authCode } = req.body;
+
+  User.findOne({ email }).then(async (user) => {
+    // check user exists
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Check auth code exists
+    if (!user.resetAuth || user.resetAuth === undefined) {
+      return res.status(404).json({ msg: 'Reset Not Initiated' });
+    }
+
+    // Check auth code correct
+    if (authCode !== user.resetAuth) {
+      return res.status(404).json({ msg: 'Authorisation Code Incorrect' });
+    }
+
+    // Check auth code not expired
+    if (Date.now() > user.resetAuthExpiry) {
+      return res.status(404).json({ msg: 'Authorisation Code Expired' });
+    }
+
+    // Clear reset flow for user
+    user.resetAuth = undefined;
+    user.resetAuthExpiry = undefined;
+    await user.save();
+    
+    // Auth token
+    jwt.sign({email: user.email}, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+      return res.json({ success: true, token: token });
+    });
+  })
+})
 
 // @route   POST api/accounts/played
 // @desc    Update last played time
