@@ -19,11 +19,10 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
   const [password, setPassword] = useState('Asprilla319!'); // @TODO: remove hardcoded password
   const [error, setError] = useState(undefined);
   const theme = useContext(ThemeContext);
-  const [isReset, setIsReset] = useState(true);
-  const [isAuth, setIsAuth] = useState(true);
+  const [isReset, setIsReset] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   const [isNewPass, setIsNewPass] = useState(false);
   const [authCode, setAuthCode] = useState('');
-  const [authToken, setAuthToken] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const AccountService = new accountService();
@@ -72,14 +71,34 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
 
   const authoriseReset = () => {
     setIsLoading(true);
-    AccountService.authoriseReset(email, authCode).then((response) => {
+    AccountService.authoriseReset(email, authCode).then(async (response) => {
       if (response.status === 200) {
-        setAuthCode('');
-        setAuthToken(response.data.token);
-        setIsNewPass(true);
-        setIsLoading(false);
+        await SecureStore.setItemAsync('jwt_token', response.data.token).then(() => {
+          setAuthCode('');
+          setIsNewPass(true);
+          setIsLoading(false);
+        });
       } else {
         setError(response.msg);
+        setIsLoading(false);
+      }
+    });
+  };
+
+  const resetPassword = () => {
+    setIsLoading(true);
+    AccountService.resetPassword(email, password, passwordConfirm).then((res) => {
+      if (res.status === 200) {
+        setEmail('');
+        setPassword('');
+        setPasswordConfirm('');
+        setIsReset(false);
+        setIsAuth(false);
+        setIsNewPass(false);
+        setIsLoading(false);
+        setIsLoggedIn(true);
+      } else {
+        setError(res.msg);
         setIsLoading(false);
       }
     });
@@ -92,6 +111,8 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
       resetRequest();
     } else if (!isNewPass) {
       authoriseReset();
+    } else {
+      resetPassword();
     }
   };
 
@@ -118,7 +139,8 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
   const submitDisabled =
     (!isReset && (email === '' || password === '' || error !== undefined)) ||
     (isReset && !isAuth && email === '') ||
-    (isReset && isAuth && !isNewPass && (email === '' || authCode === '' || authCode.length < 4));
+    (isReset && isAuth && !isNewPass && (email === '' || authCode === '' || authCode.length < 4)) ||
+    (isReset && isAuth && isNewPass && (password === '' || passwordConfirm === ''));
 
   return (
     <View>

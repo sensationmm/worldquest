@@ -228,10 +228,51 @@ router.post('/authoriseReset', (req, res) => {
     user.resetAuth = undefined;
     user.resetAuthExpiry = undefined;
     await user.save();
+
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      theme: user.theme
+    };
     
     // Auth token
-    jwt.sign({email: user.email}, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
       return res.json({ success: true, token: token });
+    });
+  })
+})
+
+// @route   POST api/accounts/resetPassword
+// @desc    Resets user password
+// @access  Private
+router.post('/resetPassword', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const { errors, isValid } = validatePasswordResetInput(req.body, 'newPass');
+
+  if (!isValid) {
+    return res.status(400).json({ msg: errors });
+  }
+  
+  User.findOne({ email: req.user.email }).then((user) => {
+    // check user exists
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(req.body.password, salt, (err, hash) => {
+        if (err) {
+          throw err;
+        }
+
+        user.password = hash;
+
+        user
+          .save()
+          .then((user) => res.json(user))
+          .catch((err) => console.log(err));
+      });
     });
   })
 })

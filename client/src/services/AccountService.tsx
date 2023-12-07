@@ -70,6 +70,21 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
+  resetPassword = (email: string, password: string, password2: string) => {
+    const config = {
+      url: 'accounts/resetPassword',
+      method: 'post',
+      unauthed: false,
+      data: {
+        email,
+        password,
+        password2,
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
   buyClues = (num: number) => {
     const config = {
       url: 'accounts/buyClues',
