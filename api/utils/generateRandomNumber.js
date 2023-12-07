@@ -1,4 +1,4 @@
-const generateRandomNumber = (max: number, minLength = 1, startZero = false) => {
+module.exports = function generateRandomNumber(max, minLength = 1, startZero = false) {
   let randomNumber = Math.floor(Math.random() * max);
 
   if (!startZero) {
@@ -11,5 +11,3 @@ const generateRandomNumber = (max: number, minLength = 1, startZero = false) => 
 
   return randomNumber;
 };
-
-export default generateRandomNumber;

@@ -29,7 +29,7 @@ const Register: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn }) => {
   const onRegister = async () => {
     setIsLoading(true);
     const avatarOptions = Object.keys(AvatarPlaceholder).filter((key) => isNaN(Number(key)));
-    const avatarSelect = generateRandomNumber(avatarOptions.length, true);
+    const avatarSelect = generateRandomNumber(avatarOptions.length, 1, true);
     const newAvatar = avatarOptions[avatarSelect] as unknown as AvatarPlaceholder;
 
     AccountService.register(name, email, password, password2, newAvatar).then(async (response) => {

@@ -2,11 +2,15 @@ import { StyleSheet } from 'react-native';
 
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
+import { getTheme } from '../../utils/theme';
 
 const styles = (theme) =>
   StyleSheet.create({
     main: {
       marginBottom: 20,
+    },
+    disabled: {
+      backgroundColor: getTheme(theme).primary,
     },
     input: {
       backgroundColor: Colors.basic.white,

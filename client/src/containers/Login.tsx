@@ -1,10 +1,10 @@
 import * as SecureStore from 'expo-secure-store';
 import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import { Link } from '@react-navigation/native';
 
-import { ErrorBox } from '../components/box';
+import Box, { ErrorBox } from '../components/box';
 import Button from '../components/button';
 import FormInput from '../components/form-input';
 import PageHeader from '../components/page-header';
@@ -19,6 +19,11 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
   const [password, setPassword] = useState('Asprilla319!'); // @TODO: remove hardcoded password
   const [error, setError] = useState(undefined);
   const theme = useContext(ThemeContext);
+  const [isReset, setIsReset] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [isNewPass, setIsNewPass] = useState(false);
+  const [authCode, setAuthCode] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const AccountService = new accountService();
 
@@ -46,25 +51,138 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
     setState(val);
   };
 
-  const submitDisabled = email === '' || password === '' || error !== undefined;
+  const setPasswordReset = () => {
+    setIsReset(true);
+    setError(false);
+  };
+
+  const resetRequest = () => {
+    setIsLoading(true);
+    AccountService.requestReset(email).then(() => {
+      setIsAuth(true);
+      setIsLoading(false);
+    });
+  };
+
+  const getAction = () => {
+    if (!isReset) {
+      onLogin();
+    } else if (!isAuth) {
+      resetRequest();
+    } else if (!isNewPass) {
+      setIsNewPass(true);
+    }
+  };
+
+  const getLabel = () => {
+    if (!isReset) {
+      return 'Log In';
+    } else if (!isAuth) {
+      return 'Request Reset';
+    } else if (!isNewPass) {
+      return 'Authorise Reset';
+    } else {
+      return 'Set New Password';
+    }
+  };
+
+  const cancelReset = () => {
+    setIsAuth(false);
+    setIsReset(false);
+    setIsNewPass(false);
+    setAuthCode('');
+    setPasswordConfirm('');
+  };
+
+  const submitDisabled =
+    (!isReset && (email === '' || password === '' || error !== undefined)) || (!isAuth && email === '');
 
   return (
     <View>
-      <PageHeader title={'Log In'} />
+      <PageHeader title={!isReset ? 'Log In' : 'Reset Password'} />
 
-      <FormInput label={'Email address'} value={email} onChange={(val: string) => onType(val, setEmail)} />
-      <FormInput isPassword label={'Password'} value={password} onChange={(val: string) => onType(val, setPassword)} />
+      <FormInput
+        label={'Email address'}
+        value={email}
+        onChange={(val: string) => onType(val, setEmail)}
+        disabled={isNewPass}
+      />
+
+      {(!isReset || isNewPass) && (
+        <FormInput
+          isPassword
+          label={'Password'}
+          value={password}
+          onChange={(val: string) => onType(val, setPassword)}
+        />
+      )}
+
+      {isReset && isAuth && !isNewPass && (
+        <FormInput label={'Authorisation code'} value={authCode} onChange={(val: string) => onType(val, setAuthCode)} />
+      )}
+
+      {isNewPass && (
+        <FormInput
+          isPassword
+          label={'Confirm Password'}
+          value={passwordConfirm}
+          onChange={(val: string) => onType(val, setPasswordConfirm)}
+        />
+      )}
 
       {error && <ErrorBox>{error}</ErrorBox>}
 
-      <Button onClick={onLogin} label={'Log In'} disabled={submitDisabled} />
+      <Button onClick={getAction} label={getLabel()} disabled={submitDisabled} />
+      {isReset && <Button type='secondary' onClick={cancelReset} label='Cancel' />}
 
-      <Text style={{ ...Fonts(theme).body, ...Fonts(theme).bold, color: 'white', textAlign: 'center' }}>
-        Don't have an account?&nbsp;
-        <Link to={{ screen: 'Register' }} style={{ textDecorationLine: 'underline' }}>
-          Register here
-        </Link>
-      </Text>
+      {!isReset ? (
+        <>
+          <Text
+            style={{ ...Fonts(theme).body, ...Fonts(theme).bold, color: 'white', textAlign: 'center', marginTop: 20 }}
+          >
+            Don't have an account yet?
+          </Text>
+          <Text style={{ ...Fonts(theme).body, ...Fonts(theme).bold, color: 'white', textAlign: 'center' }}>
+            <Link to={{ screen: 'Register' }} style={{ textDecorationLine: 'underline' }}>
+              Register here
+            </Link>
+          </Text>
+
+          <Text
+            style={{ ...Fonts(theme).body, ...Fonts(theme).bold, color: 'white', textAlign: 'center', marginTop: 30 }}
+          >
+            Forgot your password?
+          </Text>
+          <TouchableOpacity onPress={setPasswordReset}>
+            <Text
+              style={{
+                ...Fonts(theme).body,
+                ...Fonts(theme).bold,
+                color: 'white',
+                textAlign: 'center',
+                textDecorationLine: 'underline',
+              }}
+            >
+              Reset here
+            </Text>
+          </TouchableOpacity>
+        </>
+      ) : !isAuth ? (
+        <Box>
+          <Text style={{ textAlign: 'center' }}>
+            If an account exists with this email address, an authorisation code will be emailed to you.
+          </Text>
+          <Text style={{ textAlign: 'center', marginTop: 10 }}>This code will expire after 15 minutes.</Text>
+        </Box>
+      ) : (
+        !isNewPass && (
+          <Box>
+            <Text style={{ textAlign: 'center' }}>
+              Enter the authorisation code from your email to reset your password.
+            </Text>
+          </Box>
+        )
+      )}
     </View>
   );
 };

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
@@ -8,15 +7,31 @@ const passport = require('passport');
 const multer = require('multer');
 const upload = multer();
 const { uuid } = require('uuidv4');
+const datefns = require('date-fns')
 
 // Load input validation
 const validateEditInput = require('../../validation/edit');
 const validateLoginInput = require('../../validation/login');
 const validateRegisterInput = require('../../validation/register');
+const validateResetRequestInput = require('../../validation/resetRequest');
 
 // Load models
 const Image = require('../../models/Image');
 const User = require('../../models/User');
+const generateRandomNumber = require('../../utils/generateRandomNumber');
+
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  host: "smtpout.secureserver.net",
+  port: 465,
+  secure: true,
+  auth: {
+    // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+    user: "kevin@sensationmultimedia.co.uk",
+    pass: "Guimares319!",
+  },
+});
 
 // @route   GET api/accounts/test
 // @desc    Tests users route
@@ -27,7 +42,7 @@ router.get('/test', (req, res) =>
   }),
 );
 
-// @route   GET api/accounts/register
+// @route   POST api/accounts/register
 // @desc    Register a user
 // @access  Public
 router.post('/register', (req, res) => {
@@ -70,7 +85,7 @@ router.post('/register', (req, res) => {
   });
 });
 
-// @route   GET api/accounts/login
+// @route   POST api/accounts/login
 // @desc    Login User / returning JWT
 // @access  Public
 router.post('/login', (req, res) => {
@@ -132,6 +147,45 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
     clueTokens: req.user.clue_tokens,
     theme: req.user.theme
   });
+});
+
+// @route   POST api/accounts/requestReset
+// @desc    Initiate password reset request
+// @access  Public
+router.post('/requestReset', (req, res) => {
+  const { errors, isValid } = validateResetRequestInput(req.body);
+
+  // Check validation
+  if (!isValid) {
+    return res.status(400).json({ msg: errors });
+  }
+
+  const { email } = req.body;
+
+  User.findOne({ email }).then(async (user) => {
+    // check user exists
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    const authCode = generateRandomNumber(9999, 4);
+
+    user.resetAuth = authCode;
+    user.resetAuthExpiry = datefns.addMinutes(Date.now(), 15);
+    await user.save();
+
+    await transporter.sendMail({
+      from: '"WorldQuest" <noreply@sensationmultimedia.co.uk>', // sender address
+      to: user.email, // list of receivers
+      subject: "Password Reset", // Subject line
+      text: `Auth Code: ${authCode}`, // plain text body
+    }).then(() => {
+      res.json({ success: true });
+    }).catch((e) => {
+      console.log(e)
+      res.json({ success: false, msg: 'Email failure' });  
+    });
+  })
 });
 
 // @route   POST api/accounts/played

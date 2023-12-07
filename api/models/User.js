@@ -36,6 +36,13 @@ const UserSchema = new Schema({
   },
   theme: {
     type: 'brand' | 'brand2' | 'brand3' | 'brand4' | 'brand5' | 'brand6'
+  },
+  resetAuth: {
+    type: String,
+    length: 4
+  },
+  resetAuthExpiry: {
+    type: Date,
   }
 });
 

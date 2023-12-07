@@ -1,5 +1,6 @@
 import { TextStyle } from 'react-native';
 import { getTheme } from '../utils/theme';
+import Colors from './Colors';
 
 const Fredoka = {
   fontFamily: 'FredokaOne_400Regular',
@@ -34,6 +35,9 @@ const Fonts = (theme) =>
       fontSize: 20,
       color: getTheme(theme).primary,
       fontWeight: 'bold',
+    },
+    inputDisabled: {
+      color: Colors.basic.white,
     },
     label: {
       ...Fredoka,

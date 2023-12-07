@@ -43,6 +43,19 @@ class AccountService extends BaseService {
     return this.doRequest(config);
   };
 
+  requestReset = (email: string) => {
+    const config = {
+      url: 'accounts/requestReset',
+      method: 'post',
+      unauthed: true,
+      data: {
+        email,
+      },
+    };
+
+    return this.doRequest(config);
+  };
+
   buyClues = (num: number) => {
     const config = {
       url: 'accounts/buyClues',
