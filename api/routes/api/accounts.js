@@ -7,7 +7,7 @@ const passport = require('passport');
 const multer = require('multer');
 const upload = multer();
 const { uuid } = require('uuidv4');
-const datefns = require('date-fns')
+const datefns = require('date-fns');
 
 // Load input validation
 const validateEditInput = require('../../validation/edit');

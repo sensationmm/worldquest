@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const datefns = require('date-fns')
 
 const Guess = require('../../models/Guess');
 const Progress = require('../../models/Progress');
@@ -226,8 +227,10 @@ router.post('/guess', passport.authenticate('jwt', { session: false }), (req, re
               Progress.findById(progressId)
                 .then((progress) => {
                   if (!progress.completed_at) {
-                    const now = Date.now();
-                    progress.completed_at = now;
+                    const tomorrow = datefns.addDays(Date.now(), 1);
+                    const started = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 0, 0, 0)
+
+                    progress.completed_at = Date.now();
                     progress
                       .save()
                       .then(() => {
@@ -236,7 +239,7 @@ router.post('/guess', passport.authenticate('jwt', { session: false }), (req, re
                             const newProgress = new Progress({
                               user: req.user.id,
                               riddle: nextRiddle.id,
-                              started_at: now
+                              started_at: started
                             });
 
                             newProgress
