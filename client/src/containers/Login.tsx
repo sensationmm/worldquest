@@ -22,6 +22,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
   const [isReset, setIsReset] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [isNewPass, setIsNewPass] = useState(false);
+  const [authCodeExpired, setAuthCodeExpired] = useState(false);
   const [authCode, setAuthCode] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
@@ -58,7 +59,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
 
   const resetRequest = () => {
     setIsLoading(true);
-    AccountService.requestReset(email).then((response) => {
+    return AccountService.requestReset(email).then((response) => {
       if (response.status === 200) {
         setIsAuth(true);
         setIsLoading(false);
@@ -81,6 +82,9 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
       } else {
         setError(response.msg);
         setIsLoading(false);
+        if (response.msg === 'Authorisation Code Expired') {
+          setAuthCodeExpired(true);
+        }
       }
     });
   };
@@ -137,6 +141,13 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
     setPasswordConfirm('');
   };
 
+  const restartResetFlow = async () => {
+    await resetRequest();
+    setAuthCode('');
+    setAuthCodeExpired(false);
+    setError(undefined);
+  };
+
   const submitDisabled =
     (!isReset && (email === '' || password === '' || error !== undefined)) ||
     (isReset && !isAuth && email === '') ||
@@ -178,7 +189,11 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
 
       {error && <ErrorBox>{error}</ErrorBox>}
 
-      <Button onClick={getAction} label={getLabel()} disabled={submitDisabled} />
+      {!authCodeExpired ? (
+        <Button onClick={getAction} label={getLabel()} disabled={submitDisabled} />
+      ) : (
+        <Button onClick={restartResetFlow} label='Request New Auth Code' />
+      )}
       {isReset && <Button type='secondary' onClick={cancelReset} label='Cancel' />}
 
       {!isReset ? (

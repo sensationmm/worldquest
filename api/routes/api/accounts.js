@@ -221,6 +221,8 @@ router.post('/authoriseReset', (req, res) => {
 
     // Check auth code not expired
     if (Date.now() > user.resetAuthExpiry) {
+      user.resetAuth = undefined;
+      user.resetAuthExpiry = undefined;
       return res.status(404).json({ msg: 'Authorisation Code Expired' });
     }
 

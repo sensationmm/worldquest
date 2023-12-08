@@ -87,6 +87,11 @@ const App = () => {
         index: 0,
         routes: [{ name: 'Home' }],
       });
+    } else {
+      navigationRef.resetRoot({
+        index: 0,
+        routes: [{ name: 'Log In' }],
+      });
     }
   }, [isLoggedIn]);
 
