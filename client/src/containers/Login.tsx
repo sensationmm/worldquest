@@ -96,6 +96,7 @@ const Login: React.FC<ScreenProps> = ({ setIsLoading, setIsLoggedIn, setTheme })
         setIsAuth(false);
         setIsNewPass(false);
         setIsLoading(false);
+        setTheme(res.data.theme);
         setIsLoggedIn(true);
       } else {
         setError(res.msg);
