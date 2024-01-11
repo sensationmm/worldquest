@@ -16,6 +16,7 @@ import getByValue from './utils/getByValue';
 
 import accountService from './services/AccountService';
 import { Theme } from './types/User.types';
+import Walkthrough from './components/walkthrough';
 
 export type ScreenProps = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -24,6 +25,7 @@ export type ScreenProps = {
   refetchData?: boolean;
   setRefetchData?: Dispatch<SetStateAction<boolean>>;
   setTheme?: Dispatch<SetStateAction<Theme>>;
+  showWalkthrough: () => void;
 };
 
 export interface FunctionalScreenProps extends ScreenProps {
@@ -40,6 +42,7 @@ const App = () => {
   const navigationRef = useNavigationContainerRef();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(true);
   const [refetchData, setRefetchData] = useState(false);
   const [theme, setTheme] = useState<Theme>('brand');
 
@@ -108,7 +111,7 @@ const App = () => {
           <Main>
             <NavigationContainer ref={navigationRef} theme={navigationTheme} /*testId={'navigation-container'}*/>
               <Tab.Navigator
-                initialRouteName={isLoggedIn ? 'Home' : 'Log In'}
+                initialRouteName={isLoggedIn ? 'Home' : 'Info'}
                 barStyle={styles(theme).tabs}
                 labeled={false}
                 screenOptions={({ route }: { route: any }) => ({
@@ -129,6 +132,7 @@ const App = () => {
                             setRefetchData={isLoggedIn ? setRefetchData : undefined}
                             setTheme={setTheme}
                             navigation={navigation}
+                            showWalkthrough={() => setShowWalkthrough(true)}
                           />
                         </ScrollView>
                       )}
@@ -139,6 +143,7 @@ const App = () => {
             </NavigationContainer>
             <Loader isLoading={isLoading} />
           </Main>
+          {showWalkthrough && <Walkthrough closeWalkthrough={() => setShowWalkthrough(false)} />}
         </ThemeContext.Provider>
       )}
     </SafeAreaView>

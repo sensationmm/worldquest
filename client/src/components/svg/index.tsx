@@ -1,7 +1,7 @@
 import React from 'react';
 import { SvgXml } from 'react-native-svg';
 
-export default function SvgComponent({ svg, style }) {
+export default function SvgComponent({ style }) {
   const SvgImage = () => (
     <SvgXml
       style={style}

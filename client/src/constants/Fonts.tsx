@@ -12,7 +12,7 @@ interface TextStyleExport {
   [key: string]: TextStyle;
 }
 
-const Fonts = (theme) =>
+const Fonts = (theme?) =>
   ({
     body: {
       fontSize: 16,
