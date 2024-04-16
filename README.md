@@ -8,17 +8,17 @@ The following technologies are used in this repo
 
 ### Client
 
-React Native
-Typescript
-Axios
-Expo
+- React Native
+- Typescript
+- Axios
+- Expo
 
 ### API
 
-Node.js
-MongoDB
-Express
-Passport - for authentication
+- Node.js
+- MongoDB
+- Express
+- Passport - for authentication
 
 ## Getting Started
 
