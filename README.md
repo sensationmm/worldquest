@@ -28,7 +28,7 @@ The following technologies are used in this repo
 2.  Run the API `cd api; npm start`
 3.  Add the API url to the Client config
     - Copy the IP Address from the terminal window `Metro waiting on exp://???.???.???.???:8081`
-    - Open `/client/src/constants/config.tsx`
+    - Open `/client/src/config/constants.tsx`
     - Add this IP address into the `apiUrl` constant `http://???.???.???.???:5001/api/`, maintaining the socket
     - Save the file
 4.  Run the client `cd client; NODE_OPTIONS=--openssl-legacy-provider npm start;`
