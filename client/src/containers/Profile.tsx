@@ -291,14 +291,14 @@ const Profile: React.FC<FunctionalScreenProps> = ({
                             style={{ ...Styled.themeSwatch, backgroundColor: theme.primary }}
                             onPress={() => saveTheme(item as Theme)}
                           >
-                            <>
-                              <SvgComponent svg={Logo} style={{ color: theme.secondary }} />
+                            <View>
+                              <SvgComponent /*svg={Logo}*/ style={{ color: theme.secondary }} />
                               {themeContext === item && (
                                 <View style={Styled.themeCheckMark}>
                                   <Icon name={'check'} size={IconSize.MEDIUM} color={Colors.basic.black} />
                                 </View>
                               )}
-                            </>
+                            </View>
                           </TouchableHighlight>
                         );
                       })}
@@ -337,10 +337,10 @@ const Profile: React.FC<FunctionalScreenProps> = ({
                       <Avatar src={AvatarPlaceholder[av]} size='tiny' />
                       {(editValues.avatar === AvatarPlaceholder[av] ||
                         (editValues.avatar === '' && userAvatar === AvatarPlaceholder[av])) && (
-                        <View style={Styled.avatarEditOverlay}>
-                          <Icon name='check-circle' size={IconSize.SMALL} color={Colors[themeContext].secondary} />
-                        </View>
-                      )}
+                          <View style={Styled.avatarEditOverlay}>
+                            <Icon name='check-circle' size={IconSize.SMALL} color={Colors[themeContext].secondary} />
+                          </View>
+                        )}
                     </>
                   </TouchableOpacity>
                 ))}
